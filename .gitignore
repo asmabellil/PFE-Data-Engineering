@@ -3,6 +3,10 @@
 *.pem
 *.key
 
+# profils de navigateur (cookies, sessions, historique) : jamais dans Git
+**/edge-profile/
+**/chrome-profile/
+
 # données et artefacts générés
 data/
 exports/*.csv

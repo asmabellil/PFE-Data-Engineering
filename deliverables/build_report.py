@@ -8,6 +8,7 @@ import json
 import pathlib
 import re
 import subprocess
+import tempfile
 from datetime import date
 
 import markdown
@@ -149,10 +150,13 @@ def build_pdf(md_text: str) -> pathlib.Path:
     html_path.write_text(page, encoding="utf-8")
     pdf = HERE / "Rapport_PFE_JobInsight.pdf"
     browser = next(p for p in EDGE_CANDIDATES if pathlib.Path(p).exists())
-    subprocess.run([browser, "--headless=new", "--disable-gpu", "--no-pdf-header-footer",
-                    f"--user-data-dir={BUILD / 'edge-profile'}",
-                    f"--print-to-pdf={pdf}", html_path.as_uri()], check=True, timeout=180,
-                   capture_output=True)
+    # Profil navigateur jetable, HORS du dépôt : il contient cookies/historique/sessions et ne doit
+    # jamais être versionné. Il est supprimé automatiquement après la génération du PDF.
+    with tempfile.TemporaryDirectory(prefix="jobinsight-pdf-profile-", ignore_cleanup_errors=True) as profile:
+        subprocess.run([browser, "--headless=new", "--disable-gpu", "--no-pdf-header-footer",
+                        f"--user-data-dir={profile}",
+                        f"--print-to-pdf={pdf}", html_path.as_uri()], check=True, timeout=180,
+                       capture_output=True)
     return pdf
 
 
