@@ -1,0 +1,2801 @@
+{
+ "overview": {
+  "total_total": 6297,
+  "companies": 1226,
+  "countries": 30,
+  "technologies": 96,
+  "skills": 35,
+  "remote": 527,
+  "with_salary": 249,
+  "sources": 5,
+  "remote_pct": 8.4,
+  "salary_coverage_pct": 4.0,
+  "last30": 6286,
+  "prev30": 4,
+  "trend_pct": null,
+  "last_update": "2026-11-16T18:55:16.510000+00:00"
+ },
+ "timeline": [
+  {
+   "period": "2026-08-28",
+   "jobs": 2
+  },
+  {
+   "period": "2026-08-31",
+   "jobs": 1
+  },
+  {
+   "period": "2026-09-03",
+   "jobs": 1
+  },
+  {
+   "period": "2026-09-09",
+   "jobs": 1
+  },
+  {
+   "period": "2026-09-11",
+   "jobs": 1
+  },
+  {
+   "period": "2026-09-15",
+   "jobs": 1
+  },
+  {
+   "period": "2026-09-18",
+   "jobs": 1
+  },
+  {
+   "period": "2026-10-12",
+   "jobs": 1
+  },
+  {
+   "period": "2026-10-14",
+   "jobs": 2
+  },
+  {
+   "period": "2026-10-17",
+   "jobs": 1
+  },
+  {
+   "period": "2026-10-20",
+   "jobs": 1
+  },
+  {
+   "period": "2026-10-22",
+   "jobs": 1
+  },
+  {
+   "period": "2026-10-26",
+   "jobs": 1
+  },
+  {
+   "period": "2026-10-27",
+   "jobs": 2
+  },
+  {
+   "period": "2026-10-28",
+   "jobs": 1
+  },
+  {
+   "period": "2026-10-29",
+   "jobs": 1
+  },
+  {
+   "period": "2026-11-02",
+   "jobs": 1
+  },
+  {
+   "period": "2026-11-04",
+   "jobs": 2
+  },
+  {
+   "period": "2026-11-05",
+   "jobs": 1
+  },
+  {
+   "period": "2026-11-06",
+   "jobs": 2
+  },
+  {
+   "period": "2026-11-07",
+   "jobs": 1
+  },
+  {
+   "period": "2026-11-08",
+   "jobs": 1
+  },
+  {
+   "period": "2026-11-09",
+   "jobs": 374
+  },
+  {
+   "period": "2026-11-10",
+   "jobs": 660
+  },
+  {
+   "period": "2026-11-11",
+   "jobs": 829
+  },
+  {
+   "period": "2026-11-12",
+   "jobs": 690
+  },
+  {
+   "period": "2026-11-13",
+   "jobs": 892
+  },
+  {
+   "period": "2026-11-14",
+   "jobs": 465
+  },
+  {
+   "period": "2026-11-15",
+   "jobs": 1608
+  },
+  {
+   "period": "2026-11-16",
+   "jobs": 752
+  }
+ ],
+ "tech": [
+  {
+   "label": "Python",
+   "jobs": 229,
+   "category": "Langage"
+  },
+  {
+   "label": "OpenAI / LLM APIs",
+   "jobs": 192,
+   "category": "IA / ML"
+  },
+  {
+   "label": "SQL",
+   "jobs": 127,
+   "category": "Langage"
+  },
+  {
+   "label": "AWS",
+   "jobs": 120,
+   "category": "Cloud"
+  },
+  {
+   "label": "CI/CD",
+   "jobs": 104,
+   "category": "DevOps"
+  },
+  {
+   "label": "Salesforce",
+   "jobs": 102,
+   "category": "Outil"
+  },
+  {
+   "label": "Java",
+   "jobs": 100,
+   "category": "Langage"
+  },
+  {
+   "label": "Kubernetes",
+   "jobs": 97,
+   "category": "DevOps"
+  },
+  {
+   "label": "Azure",
+   "jobs": 85,
+   "category": "Cloud"
+  },
+  {
+   "label": "Excel",
+   "jobs": 79,
+   "category": "BI / Visualisation"
+  },
+  {
+   "label": "Linux",
+   "jobs": 72,
+   "category": "DevOps"
+  },
+  {
+   "label": "TypeScript",
+   "jobs": 71,
+   "category": "Langage"
+  },
+  {
+   "label": "Docker",
+   "jobs": 69,
+   "category": "DevOps"
+  },
+  {
+   "label": "Git",
+   "jobs": 69,
+   "category": "DevOps"
+  },
+  {
+   "label": "GCP",
+   "jobs": 68,
+   "category": "Cloud"
+  },
+  {
+   "label": "JavaScript",
+   "jobs": 66,
+   "category": "Langage"
+  },
+  {
+   "label": "PostgreSQL",
+   "jobs": 57,
+   "category": "Base de données"
+  },
+  {
+   "label": "SAP",
+   "jobs": 48,
+   "category": "Outil"
+  },
+  {
+   "label": "React",
+   "jobs": 47,
+   "category": "Framework"
+  },
+  {
+   "label": "HubSpot",
+   "jobs": 42,
+   "category": "Outil"
+  }
+ ],
+ "skills_tech": [
+  {
+   "label": "Digital Marketing",
+   "jobs": 612,
+   "category": "Technique"
+  },
+  {
+   "label": "Sales",
+   "jobs": 319,
+   "category": "Technique"
+  },
+  {
+   "label": "Data Visualization",
+   "jobs": 301,
+   "category": "Technique"
+  },
+  {
+   "label": "Web Development",
+   "jobs": 184,
+   "category": "Technique"
+  },
+  {
+   "label": "Machine Learning",
+   "jobs": 166,
+   "category": "Technique"
+  },
+  {
+   "label": "Project Management",
+   "jobs": 130,
+   "category": "Technique"
+  },
+  {
+   "label": "Agile / Scrum",
+   "jobs": 122,
+   "category": "Technique"
+  },
+  {
+   "label": "Cybersecurity",
+   "jobs": 115,
+   "category": "Technique"
+  },
+  {
+   "label": "Data Engineering",
+   "jobs": 103,
+   "category": "Technique"
+  },
+  {
+   "label": "Data Analysis",
+   "jobs": 101,
+   "category": "Technique"
+  },
+  {
+   "label": "UX/UI Design",
+   "jobs": 100,
+   "category": "Technique"
+  },
+  {
+   "label": "Customer Support",
+   "jobs": 65,
+   "category": "Technique"
+  }
+ ],
+ "skills_soft": [
+  {
+   "label": "Communication",
+   "jobs": 856,
+   "category": "Comportementale"
+  },
+  {
+   "label": "Travail en équipe",
+   "jobs": 682,
+   "category": "Comportementale"
+  },
+  {
+   "label": "Adaptabilité",
+   "jobs": 614,
+   "category": "Comportementale"
+  },
+  {
+   "label": "Autonomie",
+   "jobs": 463,
+   "category": "Comportementale"
+  },
+  {
+   "label": "Leadership",
+   "jobs": 352,
+   "category": "Comportementale"
+  },
+  {
+   "label": "Gestion du temps",
+   "jobs": 328,
+   "category": "Comportementale"
+  },
+  {
+   "label": "Créativité",
+   "jobs": 242,
+   "category": "Comportementale"
+  },
+  {
+   "label": "Résolution de problèmes",
+   "jobs": 196,
+   "category": "Comportementale"
+  },
+  {
+   "label": "Rigueur",
+   "jobs": 134,
+   "category": "Comportementale"
+  }
+ ],
+ "skills_lang": [
+  {
+   "label": "Anglais",
+   "jobs": 778,
+   "category": "Langue"
+  },
+  {
+   "label": "Allemand",
+   "jobs": 378,
+   "category": "Langue"
+  },
+  {
+   "label": "Français",
+   "jobs": 128,
+   "category": "Langue"
+  },
+  {
+   "label": "Espagnol",
+   "jobs": 35,
+   "category": "Langue"
+  }
+ ],
+ "country": [
+  {
+   "label": "France",
+   "jobs": 4973
+  },
+  {
+   "label": "Allemagne",
+   "jobs": 301
+  },
+  {
+   "label": "unknown",
+   "jobs": 206
+  },
+  {
+   "label": "Royaume-Uni",
+   "jobs": 174
+  },
+  {
+   "label": "États-Unis",
+   "jobs": 149
+  },
+  {
+   "label": "Suisse",
+   "jobs": 131
+  },
+  {
+   "label": "Pays-Bas",
+   "jobs": 129
+  },
+  {
+   "label": "Canada",
+   "jobs": 99
+  },
+  {
+   "label": "Espagne",
+   "jobs": 27
+  },
+  {
+   "label": "Maroc",
+   "jobs": 22
+  },
+  {
+   "label": "Belgique",
+   "jobs": 11
+  },
+  {
+   "label": "Pologne",
+   "jobs": 11
+  }
+ ],
+ "city": [
+  {
+   "label": "Paris",
+   "jobs": 778
+  },
+  {
+   "label": "unknown",
+   "jobs": 735
+  },
+  {
+   "label": "Toulouse",
+   "jobs": 159
+  },
+  {
+   "label": "Lyon",
+   "jobs": 135
+  },
+  {
+   "label": "Nanterre",
+   "jobs": 87
+  },
+  {
+   "label": "London",
+   "jobs": 86
+  },
+  {
+   "label": "Berlin",
+   "jobs": 82
+  },
+  {
+   "label": "Zurich",
+   "jobs": 81
+  },
+  {
+   "label": "Bordeaux",
+   "jobs": 72
+  },
+  {
+   "label": "Courbevoie",
+   "jobs": 64
+  },
+  {
+   "label": "Lille",
+   "jobs": 62
+  },
+  {
+   "label": "Puteaux",
+   "jobs": 62
+  }
+ ],
+ "contract": [
+  {
+   "label": "unknown",
+   "jobs": 4296
+  },
+  {
+   "label": "full_time",
+   "jobs": 917
+  },
+  {
+   "label": "internship",
+   "jobs": 853
+  },
+  {
+   "label": "apprenticeship",
+   "jobs": 99
+  },
+  {
+   "label": "temporary",
+   "jobs": 45
+  },
+  {
+   "label": "contract",
+   "jobs": 44
+  },
+  {
+   "label": "freelance",
+   "jobs": 31
+  },
+  {
+   "label": "part_time",
+   "jobs": 12
+  }
+ ],
+ "experience": [
+  {
+   "label": "unknown",
+   "jobs": 3731
+  },
+  {
+   "label": "intern",
+   "jobs": 953
+  },
+  {
+   "label": "senior",
+   "jobs": 707
+  },
+  {
+   "label": "lead",
+   "jobs": 473
+  },
+  {
+   "label": "mid",
+   "jobs": 259
+  },
+  {
+   "label": "junior",
+   "jobs": 174
+  }
+ ],
+ "industry": [
+  {
+   "label": "unknown",
+   "jobs": 4509
+  },
+  {
+   "label": "Développement logiciel",
+   "jobs": 945
+  },
+  {
+   "label": "Commercial & Vente",
+   "jobs": 268
+  },
+  {
+   "label": "Produit & Gestion de projet",
+   "jobs": 231
+  },
+  {
+   "label": "Marketing & Communication",
+   "jobs": 73
+  },
+  {
+   "label": "Support client",
+   "jobs": 66
+  },
+  {
+   "label": "DevOps & Cloud",
+   "jobs": 59
+  },
+  {
+   "label": "Data & IA",
+   "jobs": 58
+  },
+  {
+   "label": "Design & UX",
+   "jobs": 26
+  },
+  {
+   "label": "Cybersécurité",
+   "jobs": 23
+  },
+  {
+   "label": "Finance & Comptabilité",
+   "jobs": 23
+  },
+  {
+   "label": "Rédaction & Contenu",
+   "jobs": 10
+  },
+  {
+   "label": "RH & Recrutement",
+   "jobs": 6
+  }
+ ],
+ "source": [
+  {
+   "label": "wttj",
+   "jobs": 4951
+  },
+  {
+   "label": "arbeitnow",
+   "jobs": 896
+  },
+  {
+   "label": "jobicy",
+   "jobs": 415
+  },
+  {
+   "label": "pythonorg",
+   "jobs": 19
+  },
+  {
+   "label": "remotive",
+   "jobs": 17
+  }
+ ],
+ "salaries": {
+  "count": 249,
+  "average": 126481,
+  "distribution": [
+   {
+    "range": "0k+",
+    "jobs": 1
+   },
+   {
+    "range": "20k+",
+    "jobs": 7
+   },
+   {
+    "range": "30k+",
+    "jobs": 4
+   },
+   {
+    "range": "40k+",
+    "jobs": 14
+   },
+   {
+    "range": "50k+",
+    "jobs": 3
+   },
+   {
+    "range": "60k+",
+    "jobs": 26
+   },
+   {
+    "range": "80k+",
+    "jobs": 38
+   },
+   {
+    "range": "100k+",
+    "jobs": 58
+   },
+   {
+    "range": "130k+",
+    "jobs": 33
+   },
+   {
+    "range": "160k+",
+    "jobs": 35
+   },
+   {
+    "range": "200k+",
+    "jobs": 30
+   }
+  ],
+  "by_experience": [
+   {
+    "label": "lead",
+    "n": 115,
+    "avg": 151501,
+    "min": 14720,
+    "max": 506000
+   },
+   {
+    "label": "senior",
+    "n": 96,
+    "avg": 114022,
+    "min": 30150,
+    "max": 276000
+   },
+   {
+    "label": "mid",
+    "n": 9,
+    "avg": 104975,
+    "min": 22669,
+    "max": 257600
+   },
+   {
+    "label": "unknown",
+    "n": 19,
+    "avg": 86805,
+    "min": 22669,
+    "max": 184000
+   },
+   {
+    "label": "junior",
+    "n": 7,
+    "avg": 60147,
+    "min": 18400,
+    "max": 101430
+   },
+   {
+    "label": "intern",
+    "n": 3,
+    "avg": 36676,
+    "min": 16380,
+    "max": 88320
+   }
+  ],
+  "by_country": [
+   {
+    "label": "États-Unis",
+    "n": 112,
+    "avg": 145800,
+    "min": 22669,
+    "max": 506000
+   },
+   {
+    "label": "France",
+    "n": 4,
+    "avg": 138501,
+    "min": 110400,
+    "max": 170000
+   },
+   {
+    "label": "Allemagne",
+    "n": 19,
+    "avg": 120118,
+    "min": 63000,
+    "max": 293000
+   },
+   {
+    "label": "Autriche",
+    "n": 2,
+    "avg": 118090,
+    "min": 82250,
+    "max": 163566
+   },
+   {
+    "label": "Canada",
+    "n": 58,
+    "avg": 117919,
+    "min": 16380,
+    "max": 293939
+   },
+   {
+    "label": "Belgique",
+    "n": 3,
+    "avg": 108347,
+    "min": 60000,
+    "max": 156333
+   },
+   {
+    "label": "Royaume-Uni",
+    "n": 15,
+    "avg": 104645,
+    "min": 37674,
+    "max": 234000
+   },
+   {
+    "label": "Irlande",
+    "n": 3,
+    "avg": 100733,
+    "min": 64000,
+    "max": 132000
+   },
+   {
+    "label": "Pays-Bas",
+    "n": 2,
+    "avg": 100088,
+    "min": 75600,
+    "max": 127500
+   },
+   {
+    "label": "unknown",
+    "n": 15,
+    "avg": 94091,
+    "min": 14720,
+    "max": 276000
+   },
+   {
+    "label": "Italie",
+    "n": 2,
+    "avg": 73456,
+    "min": 44200,
+    "max": 116250
+   },
+   {
+    "label": "Espagne",
+    "n": 4,
+    "avg": 60875,
+    "min": 37000,
+    "max": 90000
+   }
+  ],
+  "by_technology": [
+   {
+    "label": "MLflow",
+    "n": 3,
+    "avg": 191636,
+    "min": 79488,
+    "max": 299000
+   },
+   {
+    "label": "GraphQL",
+    "n": 3,
+    "avg": 189785,
+    "min": 87750,
+    "max": 270480
+   },
+   {
+    "label": "React Native",
+    "n": 3,
+    "avg": 170065,
+    "min": 58960,
+    "max": 276000
+   },
+   {
+    "label": "Java",
+    "n": 6,
+    "avg": 167087,
+    "min": 75348,
+    "max": 276000
+   },
+   {
+    "label": "Node.js",
+    "n": 7,
+    "avg": 160686,
+    "min": 87750,
+    "max": 259440
+   },
+   {
+    "label": "Ruby on Rails",
+    "n": 3,
+    "avg": 160680,
+    "min": 60000,
+    "max": 276000
+   },
+   {
+    "label": "Databricks",
+    "n": 12,
+    "avg": 148212,
+    "min": 67056,
+    "max": 299000
+   },
+   {
+    "label": "JavaScript",
+    "n": 15,
+    "avg": 146899,
+    "min": 38640,
+    "max": 270480
+   },
+   {
+    "label": "MySQL",
+    "n": 3,
+    "avg": 146786,
+    "min": 32476,
+    "max": 276000
+   },
+   {
+    "label": "HubSpot",
+    "n": 11,
+    "avg": 146210,
+    "min": 30150,
+    "max": 299000
+   },
+   {
+    "label": "Next.js",
+    "n": 4,
+    "avg": 143060,
+    "min": 38640,
+    "max": 270480
+   },
+   {
+    "label": "Terraform",
+    "n": 7,
+    "avg": 141164,
+    "min": 76800,
+    "max": 236900
+   },
+   {
+    "label": "Rust",
+    "n": 3,
+    "avg": 140865,
+    "min": 33120,
+    "max": 231840
+   },
+   {
+    "label": "TypeScript",
+    "n": 21,
+    "avg": 140078,
+    "min": 38640,
+    "max": 299000
+   },
+   {
+    "label": "Grafana",
+    "n": 14,
+    "avg": 139997,
+    "min": 71632,
+    "max": 293000
+   },
+   {
+    "label": "Snowflake",
+    "n": 20,
+    "avg": 137222,
+    "min": 69615,
+    "max": 271400
+   },
+   {
+    "label": "AWS",
+    "n": 26,
+    "avg": 134675,
+    "min": 38640,
+    "max": 299000
+   },
+   {
+    "label": "Kubernetes",
+    "n": 21,
+    "avg": 132816,
+    "min": 50000,
+    "max": 276000
+   },
+   {
+    "label": "GCP",
+    "n": 16,
+    "avg": 131206,
+    "min": 74035,
+    "max": 231840
+   },
+   {
+    "label": "Azure",
+    "n": 16,
+    "avg": 130105,
+    "min": 74035,
+    "max": 231840
+   }
+  ],
+  "by_contract": [
+   {
+    "label": "full_time",
+    "n": 233,
+    "avg": 131292,
+    "min": 14720,
+    "max": 506000
+   },
+   {
+    "label": "part_time",
+    "n": 3,
+    "avg": 80540,
+    "min": 22669,
+    "max": 198900
+   },
+   {
+    "label": "freelance",
+    "n": 3,
+    "avg": 67167,
+    "min": 18400,
+    "max": 121440
+   },
+   {
+    "label": "contract",
+    "n": 7,
+    "avg": 49961,
+    "min": 22669,
+    "max": 101430
+   },
+   {
+    "label": "internship",
+    "n": 3,
+    "avg": 36676,
+    "min": 16380,
+    "max": 88320
+   }
+  ]
+ },
+ "quality": [
+  {
+   "run_id": "20261116T185238",
+   "date": "2026-11-16",
+   "created_at": "2026-11-16T18:54:19.220007+00:00",
+   "records_total": 6321,
+   "records_valid": 6321,
+   "records_quarantine": 0,
+   "duplicates_removed": 72,
+   "records_processed": 6249,
+   "uniqueness_ok": true,
+   "avg_completeness": 0.593,
+   "issues": [
+    {
+     "code": "MISSING_DESCRIPTION",
+     "dimension": "Complétude",
+     "count": 5000
+    },
+    {
+     "code": "COUNTRY_MISMATCH",
+     "dimension": "Cohérence",
+     "count": 134
+    },
+    {
+     "code": "MISSING_LOCATION",
+     "dimension": "Complétude",
+     "count": 36
+    },
+    {
+     "code": "SHORT_DESCRIPTION",
+     "dimension": "Complétude",
+     "count": 2
+    }
+   ],
+   "per_source": [
+    {
+     "source": "arbeitnow",
+     "status": "valid",
+     "count": 900
+    },
+    {
+     "source": "jobicy",
+     "status": "valid",
+     "count": 383
+    },
+    {
+     "source": "pythonorg",
+     "status": "valid",
+     "count": 21
+    },
+    {
+     "source": "remotive",
+     "status": "valid",
+     "count": 17
+    },
+    {
+     "source": "wttj",
+     "status": "valid",
+     "count": 5000
+    }
+   ],
+   "processed_prefix": "processed/jobs/2026-11-16/20261116T185238/"
+  },
+  {
+   "run_id": "20261116T120000",
+   "date": "2026-11-16",
+   "created_at": "2026-11-16T18:01:30.848676+00:00",
+   "records_total": 1316,
+   "records_valid": 1316,
+   "records_quarantine": 0,
+   "duplicates_removed": 21,
+   "records_processed": 1295,
+   "uniqueness_ok": true,
+   "avg_completeness": 0.795,
+   "issues": [
+    {
+     "code": "MISSING_LOCATION",
+     "dimension": "Complétude",
+     "count": 36
+    },
+    {
+     "code": "SHORT_DESCRIPTION",
+     "dimension": "Complétude",
+     "count": 2
+    }
+   ],
+   "per_source": [
+    {
+     "source": "arbeitnow",
+     "status": "valid",
+     "count": 900
+    },
+    {
+     "source": "jobicy",
+     "status": "valid",
+     "count": 378
+    },
+    {
+     "source": "pythonorg",
+     "status": "valid",
+     "count": 21
+    },
+    {
+     "source": "remotive",
+     "status": "valid",
+     "count": 17
+    }
+   ],
+   "processed_prefix": "processed/jobs/2026-11-16/20261116T120000/"
+  },
+  {
+   "run_id": "20261116T175546",
+   "date": "2026-11-16",
+   "created_at": "2026-11-16T17:57:07.823784+00:00",
+   "records_total": 1316,
+   "records_valid": 1316,
+   "records_quarantine": 0,
+   "duplicates_removed": 21,
+   "records_processed": 1295,
+   "uniqueness_ok": true,
+   "avg_completeness": 0.795,
+   "issues": [
+    {
+     "code": "MISSING_LOCATION",
+     "dimension": "Complétude",
+     "count": 36
+    },
+    {
+     "code": "SHORT_DESCRIPTION",
+     "dimension": "Complétude",
+     "count": 2
+    }
+   ],
+   "per_source": [
+    {
+     "source": "arbeitnow",
+     "status": "valid",
+     "count": 900
+    },
+    {
+     "source": "jobicy",
+     "status": "valid",
+     "count": 378
+    },
+    {
+     "source": "pythonorg",
+     "status": "valid",
+     "count": 21
+    },
+    {
+     "source": "remotive",
+     "status": "valid",
+     "count": 17
+    }
+   ],
+   "processed_prefix": "processed/jobs/2026-11-16/20261116T175546/"
+  },
+  {
+   "run_id": "20261116T060000",
+   "date": "2026-11-16",
+   "created_at": "2026-11-16T17:53:59.520651+00:00",
+   "records_total": 1332,
+   "records_valid": 1332,
+   "records_quarantine": 0,
+   "duplicates_removed": 63,
+   "records_processed": 1269,
+   "uniqueness_ok": true,
+   "avg_completeness": 0.796,
+   "issues": [
+    {
+     "code": "MISSING_LOCATION",
+     "dimension": "Complétude",
+     "count": 36
+    },
+    {
+     "code": "SHORT_DESCRIPTION",
+     "dimension": "Complétude",
+     "count": 2
+    }
+   ],
+   "per_source": [
+    {
+     "source": "arbeitnow",
+     "status": "valid",
+     "count": 874
+    },
+    {
+     "source": "jobicy",
+     "status": "valid",
+     "count": 378
+    },
+    {
+     "source": "pythonorg",
+     "status": "valid",
+     "count": 63
+    },
+    {
+     "source": "remotive",
+     "status": "valid",
+     "count": 17
+    }
+   ],
+   "processed_prefix": "processed/jobs/2026-11-16/20261116T060000/"
+  }
+ ],
+ "quality_summary": {
+  "total_jobs": 6297,
+  "completeness_pct": {
+   "title": 100.0,
+   "company": 100.0,
+   "country": 96.7,
+   "contract_type": 31.8,
+   "experience_level": 40.7,
+   "industry": 28.4,
+   "publication_date": 100.0,
+   "salary_annual_min_eur": 4.0,
+   "description": 21.4
+  },
+  "jobs_seen_on_multiple_sources": 1,
+  "quarantine_last_runs": [
+   {
+    "run_id": "20261116T185238",
+    "quarantine": 0,
+    "duplicates_removed": 72,
+    "total": 6321
+   },
+   {
+    "run_id": "20261116T120000",
+    "quarantine": 0,
+    "duplicates_removed": 21,
+    "total": 1316
+   },
+   {
+    "run_id": "20261116T175546",
+    "quarantine": 0,
+    "duplicates_removed": 21,
+    "total": 1316
+   },
+   {
+    "run_id": "20261116T060000",
+    "quarantine": 0,
+    "duplicates_removed": 63,
+    "total": 1332
+   }
+  ]
+ },
+ "models": [
+  {
+   "model": "category_classifier",
+   "metrics": {
+    "best_model": "logistic_regression",
+    "comparison": {
+     "logistic_regression": {
+      "accuracy": 0.5227,
+      "f1_macro": 0.3525,
+      "f1_weighted": 0.5006
+     },
+     "linear_svm": {
+      "accuracy": 0.5227,
+      "f1_macro": 0.3058,
+      "f1_weighted": 0.4706
+     },
+     "complement_nb": {
+      "accuracy": 0.4545,
+      "f1_macro": 0.2548,
+      "f1_weighted": 0.4101
+     }
+    },
+    "n_train": 352,
+    "n_test": 88,
+    "classes": [
+     "Commercial & Vente",
+     "Cybersécurité",
+     "Data & IA",
+     "Design & UX",
+     "DevOps & Cloud",
+     "Développement logiciel",
+     "Finance & Comptabilité",
+     "Marketing & Communication",
+     "Produit & Gestion de projet",
+     "Rédaction & Contenu",
+     "Support client"
+    ]
+   },
+   "created_at": "2026-11-16T18:57:07.428000+00:00"
+  },
+  {
+   "model": "category_mlp_dl",
+   "metrics": {
+    "accuracy": 0.4318,
+    "f1_macro": 0.3498,
+    "f1_weighted": 0.4422,
+    "epochs_run": 31,
+    "n_train": 299,
+    "n_test": 88,
+    "classes": [
+     "Commercial & Vente",
+     "Cybersécurité",
+     "Data & IA",
+     "Design & UX",
+     "DevOps & Cloud",
+     "Développement logiciel",
+     "Finance & Comptabilité",
+     "Marketing & Communication",
+     "Produit & Gestion de projet",
+     "Rédaction & Contenu",
+     "Support client"
+    ],
+    "embedding_model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "architecture": "MLP 384-256-128-n (ReLU, Dropout 0.3)",
+    "tfidf_baseline": {
+     "model": "logistic_regression",
+     "accuracy": 0.5227,
+     "f1_macro": 0.3525,
+     "f1_weighted": 0.5006
+    }
+   },
+   "history": [
+    {
+     "epoch": 1,
+     "loss": 2.3997,
+     "val_f1_macro": 0.0159
+    },
+    {
+     "epoch": 2,
+     "loss": 2.391,
+     "val_f1_macro": 0.0159
+    },
+    {
+     "epoch": 3,
+     "loss": 2.3814,
+     "val_f1_macro": 0.0157
+    },
+    {
+     "epoch": 4,
+     "loss": 2.3666,
+     "val_f1_macro": 0.0457
+    },
+    {
+     "epoch": 5,
+     "loss": 2.3494,
+     "val_f1_macro": 0.0444
+    },
+    {
+     "epoch": 6,
+     "loss": 2.3237,
+     "val_f1_macro": 0.0694
+    },
+    {
+     "epoch": 7,
+     "loss": 2.2906,
+     "val_f1_macro": 0.104
+    },
+    {
+     "epoch": 8,
+     "loss": 2.2356,
+     "val_f1_macro": 0.2223
+    },
+    {
+     "epoch": 9,
+     "loss": 2.1821,
+     "val_f1_macro": 0.3175
+    },
+    {
+     "epoch": 10,
+     "loss": 2.0972,
+     "val_f1_macro": 0.3649
+    },
+    {
+     "epoch": 11,
+     "loss": 2.0121,
+     "val_f1_macro": 0.3564
+    },
+    {
+     "epoch": 12,
+     "loss": 1.9115,
+     "val_f1_macro": 0.3322
+    },
+    {
+     "epoch": 13,
+     "loss": 1.7933,
+     "val_f1_macro": 0.3036
+    },
+    {
+     "epoch": 14,
+     "loss": 1.6737,
+     "val_f1_macro": 0.3632
+    },
+    {
+     "epoch": 15,
+     "loss": 1.5094,
+     "val_f1_macro": 0.3228
+    },
+    {
+     "epoch": 16,
+     "loss": 1.4175,
+     "val_f1_macro": 0.3262
+    },
+    {
+     "epoch": 17,
+     "loss": 1.3352,
+     "val_f1_macro": 0.4044
+    },
+    {
+     "epoch": 18,
+     "loss": 1.2467,
+     "val_f1_macro": 0.4707
+    },
+    {
+     "epoch": 19,
+     "loss": 1.1567,
+     "val_f1_macro": 0.3749
+    },
+    {
+     "epoch": 20,
+     "loss": 1.0793,
+     "val_f1_macro": 0.4001
+    },
+    {
+     "epoch": 21,
+     "loss": 0.9737,
+     "val_f1_macro": 0.372
+    },
+    {
+     "epoch": 22,
+     "loss": 0.8967,
+     "val_f1_macro": 0.4418
+    },
+    {
+     "epoch": 23,
+     "loss": 0.8577,
+     "val_f1_macro": 0.4896
+    },
+    {
+     "epoch": 24,
+     "loss": 0.8352,
+     "val_f1_macro": 0.3619
+    },
+    {
+     "epoch": 25,
+     "loss": 0.7819,
+     "val_f1_macro": 0.4165
+    },
+    {
+     "epoch": 26,
+     "loss": 0.7252,
+     "val_f1_macro": 0.4134
+    },
+    {
+     "epoch": 27,
+     "loss": 0.6848,
+     "val_f1_macro": 0.4215
+    },
+    {
+     "epoch": 28,
+     "loss": 0.6694,
+     "val_f1_macro": 0.4518
+    },
+    {
+     "epoch": 29,
+     "loss": 0.6092,
+     "val_f1_macro": 0.4554
+    },
+    {
+     "epoch": 30,
+     "loss": 0.5864,
+     "val_f1_macro": 0.4333
+    },
+    {
+     "epoch": 31,
+     "loss": 0.5914,
+     "val_f1_macro": 0.3794
+    }
+   ],
+   "created_at": "2026-11-16T19:00:07.765000+00:00"
+  },
+  {
+   "model": "job_clusters",
+   "metrics": {
+    "best_k": 14,
+    "silhouette": 0.1353,
+    "silhouette_by_k": {
+     "6": 0.084,
+     "7": 0.0938,
+     "8": 0.1,
+     "9": 0.1124,
+     "10": 0.1175,
+     "11": 0.1189,
+     "12": 0.1255,
+     "13": 0.127,
+     "14": 0.1353
+    },
+    "n_jobs": 6297
+   },
+   "created_at": "2026-11-16T18:57:22.781000+00:00"
+  },
+  {
+   "model": "salary_model",
+   "metrics": {
+    "best_model": "random_forest",
+    "comparison": {
+     "baseline_median": {
+      "mae_eur": 57100,
+      "r2": 0.0
+     },
+     "ridge": {
+      "mae_eur": 51516,
+      "r2": 0.2339
+     },
+     "random_forest": {
+      "mae_eur": 48285,
+      "r2": 0.2852
+     }
+    },
+    "n_train": 199,
+    "n_test": 50,
+    "target": "log(salaire annuel médian EUR)"
+   },
+   "created_at": "2026-11-16T18:56:11.810000+00:00"
+  }
+ ],
+ "clusters": [
+  {
+   "cluster_id": 12,
+   "size": 2237,
+   "label": "Directeur / Specialist / Conducteur",
+   "top_terms": [
+    "directeur",
+    "specialist",
+    "conducteur",
+    "business",
+    "cdi",
+    "cdd",
+    "assistant",
+    "product"
+   ],
+   "top_technologies": [
+    "Excel",
+    "OpenAI / LLM APIs",
+    "Java",
+    "Salesforce",
+    "SAP",
+    "SQL"
+   ],
+   "top_industries": [
+    "Développement logiciel",
+    "Commercial & Vente",
+    "Marketing & Communication"
+   ]
+  },
+  {
+   "cluster_id": 2,
+   "size": 535,
+   "label": "Manager / Product / Account",
+   "top_terms": [
+    "manager",
+    "product",
+    "account",
+    "project",
+    "sales",
+    "success",
+    "engineering",
+    "customer"
+   ],
+   "top_technologies": [
+    "OpenAI / LLM APIs",
+    "Salesforce",
+    "Excel",
+    "HubSpot",
+    "SQL",
+    "Jira"
+   ],
+   "top_industries": [
+    "Produit & Gestion de projet",
+    "Commercial & Vente",
+    "Support client"
+   ]
+  },
+  {
+   "cluster_id": 6,
+   "size": 471,
+   "label": "Ingenieur / Stage / Developpement",
+   "top_terms": [
+    "ingenieur",
+    "stage",
+    "developpement",
+    "systeme",
+    "logiciel",
+    "methodes",
+    "systemes",
+    "etudes"
+   ],
+   "top_technologies": [
+    "GCP",
+    "Kubernetes",
+    "C#",
+    "C++",
+    "SAS",
+    "Python"
+   ],
+   "top_industries": [
+    "Développement logiciel",
+    "DevOps & Cloud",
+    "Produit & Gestion de projet"
+   ]
+  },
+  {
+   "cluster_id": 10,
+   "size": 437,
+   "label": "Technicien / Charge / Maintenance",
+   "top_terms": [
+    "technicien",
+    "charge",
+    "maintenance",
+    "affaires",
+    "recrutement",
+    "clientele",
+    "chargee",
+    "ne"
+   ],
+   "top_technologies": [
+    "Linux",
+    "Vue.js"
+   ],
+   "top_industries": [
+    "Développement logiciel",
+    "Commercial & Vente",
+    "Produit & Gestion de projet"
+   ]
+  },
+  {
+   "cluster_id": 4,
+   "size": 402,
+   "label": "Stage / Assistant / Charge",
+   "top_terms": [
+    "stage",
+    "assistant",
+    "charge",
+    "ia",
+    "developpement",
+    "communication",
+    "pour",
+    "data"
+   ],
+   "top_technologies": [
+    "Power BI",
+    "Salesforce",
+    "Azure",
+    "Excel",
+    "GitLab CI",
+    "Jira"
+   ],
+   "top_industries": [
+    "Développement logiciel",
+    "Marketing & Communication",
+    "Data & IA"
+   ]
+  },
+  {
+   "cluster_id": 7,
+   "size": 334,
+   "label": "Responsable / Secteur / Cdi",
+   "top_terms": [
+    "responsable",
+    "secteur",
+    "cdi",
+    "comptables",
+    "dossiers",
+    "projet",
+    "equipe",
+    "qualite"
+   ],
+   "top_technologies": [],
+   "top_industries": [
+    "Développement logiciel",
+    "Produit & Gestion de projet",
+    "DevOps & Cloud"
+   ]
+  },
+  {
+   "cluster_id": 8,
+   "size": 320,
+   "label": "Python / Engineer / Aws",
+   "top_terms": [
+    "python",
+    "engineer",
+    "aws",
+    "ci",
+    "cd",
+    "sql",
+    "kubernetes",
+    "openai "
+   ],
+   "top_technologies": [
+    "Python",
+    "AWS",
+    "CI/CD",
+    "SQL",
+    "OpenAI / LLM APIs",
+    "Kubernetes"
+   ],
+   "top_industries": [
+    "Développement logiciel",
+    "Data & IA",
+    "DevOps & Cloud"
+   ]
+  },
+  {
+   "cluster_id": 11,
+   "size": 296,
+   "label": "Conseiller / Vente / Ere",
+   "top_terms": [
+    "conseiller",
+    "vente",
+    "ere",
+    "transaction",
+    "immobilier",
+    "clientele",
+    "patrimoine",
+    "gestion"
+   ],
+   "top_technologies": [],
+   "top_industries": [
+    "Développement logiciel",
+    "Commercial & Vente"
+   ]
+  },
+  {
+   "cluster_id": 5,
+   "size": 278,
+   "label": "Consultant / Polyvalent / Equipier",
+   "top_terms": [
+    "consultant",
+    "polyvalent",
+    "equipier",
+    "transformation",
+    "sap",
+    "experimente",
+    "viager",
+    "data"
+   ],
+   "top_technologies": [
+    "SAP",
+    "Java",
+    "OpenAI / LLM APIs",
+    "SQL",
+    "HTML/CSS",
+    "JavaScript"
+   ],
+   "top_industries": [
+    "Développement logiciel",
+    "Support client",
+    "Commercial & Vente"
+   ]
+  },
+  {
+   "cluster_id": 3,
+   "size": 268,
+   "label": "Commercial / Agent / Immobilier",
+   "top_terms": [
+    "commercial",
+    "agent",
+    "immobilier",
+    "employe",
+    "conseiller",
+    "assistant",
+    "itinerant",
+    "agence"
+   ],
+   "top_technologies": [],
+   "top_industries": [
+    "Commercial & Vente",
+    "Finance & Comptabilité",
+    "Marketing & Communication"
+   ]
+  },
+  {
+   "cluster_id": 0,
+   "size": 256,
+   "label": "Engineer / Ai / Software",
+   "top_terms": [
+    "engineer",
+    "ai",
+    "software",
+    "python",
+    "linux",
+    "data",
+    "sales",
+    "security"
+   ],
+   "top_technologies": [
+    "Python",
+    "Linux",
+    "OpenAI / LLM APIs",
+    "C++",
+    "JavaScript",
+    "Jira"
+   ],
+   "top_industries": [
+    "Développement logiciel",
+    "Commercial & Vente",
+    "Data & IA"
+   ]
+  },
+  {
+   "cluster_id": 1,
+   "size": 223,
+   "label": "Chef / Projet / Fe",
+   "top_terms": [
+    "chef",
+    "projet",
+    "fe",
+    "equipe",
+    "projets",
+    "chantier",
+    "stage",
+    "assistant"
+   ],
+   "top_technologies": [
+    "AWS",
+    "Oracle",
+    "SQL"
+   ],
+   "top_industries": [
+    "Développement logiciel",
+    "Marketing & Communication",
+    "DevOps & Cloud"
+   ]
+  },
+  {
+   "cluster_id": 9,
+   "size": 125,
+   "label": "Gestionnaire / Aide / Soignant",
+   "top_terms": [
+    "gestionnaire",
+    "aide",
+    "soignant",
+    "paie",
+    "sinistres",
+    "prevoyance",
+    "cdd",
+    "office"
+   ],
+   "top_technologies": [
+    "Excel",
+    "HubSpot"
+   ],
+   "top_industries": [
+    "Développement logiciel"
+   ]
+  },
+  {
+   "cluster_id": 13,
+   "size": 115,
+   "label": "Account / Executive / Enterprise",
+   "top_terms": [
+    "account",
+    "executive",
+    "enterprise",
+    "salesforce",
+    "sales",
+    "dach",
+    "commercial",
+    "strategic"
+   ],
+   "top_technologies": [
+    "Salesforce",
+    "SAP",
+    "HubSpot",
+    "OpenAI / LLM APIs",
+    "GitLab CI",
+    "Snowflake"
+   ],
+   "top_industries": [
+    "Commercial & Vente",
+    "Support client",
+    "Produit & Gestion de projet"
+   ]
+  }
+ ],
+ "runs": [
+  {
+   "run_id": "20261116T185238",
+   "started_at": "2026-11-16T18:52:41.979000+00:00",
+   "tasks": {
+    "collect_remotive": {
+     "status": "success",
+     "stats": {
+      "source": "remotive",
+      "status": "success",
+      "collected": 17,
+      "errors": 0
+     },
+     "at": "2026-11-16T18:52:41.979000+00:00"
+    },
+    "collect_arbeitnow": {
+     "status": "success",
+     "stats": {
+      "source": "arbeitnow",
+      "status": "success",
+      "collected": 900,
+      "errors": 0
+     },
+     "at": "2026-11-16T18:52:45.607000+00:00"
+    },
+    "collect_france_travail": {
+     "status": "skipped",
+     "stats": {
+      "source": "france_travail",
+      "status": "skipped",
+      "reason": "FRANCE_TRAVAIL_CLIENT_ID / SECRET absents",
+      "collected": 0
+     },
+     "at": "2026-11-16T18:52:45.624000+00:00"
+    },
+    "collect_wttj": {
+     "status": "success",
+     "stats": {
+      "source": "wttj",
+      "status": "success",
+      "collected": 5000,
+      "errors": 0
+     },
+     "at": "2026-11-16T18:52:45.793000+00:00"
+    },
+    "collect_jobicy": {
+     "status": "success",
+     "stats": {
+      "source": "jobicy",
+      "status": "success",
+      "collected": 383,
+      "errors": 0
+     },
+     "at": "2026-11-16T18:52:49.247000+00:00"
+    },
+    "collect_pythonorg": {
+     "status": "success",
+     "stats": {
+      "source": "pythonorg",
+      "status": "success",
+      "collected": 21,
+      "errors": 0
+     },
+     "at": "2026-11-16T18:53:07.977000+00:00"
+    },
+    "ingest_to_datalake": {
+     "status": "success",
+     "stats": {
+      "messages": 6321,
+      "invalid": 0,
+      "files": {
+       "remotive": {
+        "key": "raw/remotive/2026-11-16/batch_20261116T185238.jsonl",
+        "records": 17
+       },
+       "jobicy": {
+        "key": "raw/jobicy/2026-11-16/batch_20261116T185238.jsonl",
+        "records": 383
+       },
+       "arbeitnow": {
+        "key": "raw/arbeitnow/2026-11-16/batch_20261116T185238.jsonl",
+        "records": 900
+       },
+       "wttj": {
+        "key": "raw/wttj/2026-11-16/batch_20261116T185238.jsonl",
+        "records": 5000
+       },
+       "pythonorg": {
+        "key": "raw/pythonorg/2026-11-16/batch_20261116T185238.jsonl",
+        "records": 21
+       }
+      },
+      "date": "2026-11-16"
+     },
+     "at": "2026-11-16T18:53:25.865000+00:00"
+    },
+    "spark_etl_quality": {
+     "status": "success",
+     "stats": {
+      "run_id": "20261116T185238",
+      "date": "2026-11-16",
+      "created_at": "2026-11-16T18:54:19.220007+00:00",
+      "records_total": 6321,
+      "records_valid": 6321,
+      "records_quarantine": 0,
+      "duplicates_removed": 72,
+      "records_processed": 6249,
+      "uniqueness_ok": true,
+      "avg_completeness": 0.593,
+      "processed_prefix": "processed/jobs/2026-11-16/20261116T185238/"
+     },
+     "at": "2026-11-16T18:54:19.425000+00:00"
+    },
+    "load_mongodb": {
+     "status": "success",
+     "stats": {
+      "run_id": "20261116T185238",
+      "status": "success",
+      "inserted": 5002,
+      "updated": 1247,
+      "total_jobs": 6297
+     },
+     "at": "2026-11-16T18:54:27.196000+00:00"
+    },
+    "ml_enrich_industry": {
+     "status": "success",
+     "stats": {
+      "status": "success",
+      "predicted": 1325,
+      "candidates": 5843
+     },
+     "at": "2026-11-16T18:54:32.638000+00:00"
+    },
+    "spark_analytics_kpis": {
+     "status": "success",
+     "stats": {
+      "run_id": "20261116T185238",
+      "created_at": "2026-11-16T18:55:14.433795+00:00",
+      "total_jobs": 6297,
+      "companies": 1226,
+      "countries": 30,
+      "sources": 5,
+      "remote_jobs": 527,
+      "jobs_with_salary": 249,
+      "median_salary_eur": 118500.0,
+      "technologies": 96,
+      "skills": 35
+     },
+     "at": "2026-11-16T18:55:14.481000+00:00"
+    },
+    "refresh_semantic_index": {
+     "status": "success",
+     "stats": {
+      "status_code": 202,
+      "body": "{\"status\":\"scheduled\",\"by\":\"pipeline\"}"
+     },
+     "at": "2026-11-16T18:55:16.510000+00:00"
+    }
+   },
+   "updated_at": "2026-11-16T18:55:16.510000+00:00"
+  },
+  {
+   "run_id": "20261116T185238",
+   "started_at": "2026-11-16T18:52:41.978000+00:00",
+   "tasks": {
+    "collect_adzuna": {
+     "status": "skipped",
+     "stats": {
+      "source": "adzuna",
+      "status": "skipped",
+      "reason": "ADZUNA_APP_ID / ADZUNA_APP_KEY absents",
+      "collected": 0
+     },
+     "at": "2026-11-16T18:52:41.978000+00:00"
+    }
+   },
+   "updated_at": "2026-11-16T18:52:41.978000+00:00"
+  },
+  {
+   "run_id": "20261116T120000",
+   "started_at": "2026-11-16T18:00:02.869000+00:00",
+   "tasks": {
+    "collect_france_travail": {
+     "status": "skipped",
+     "stats": {
+      "source": "france_travail",
+      "status": "skipped",
+      "reason": "FRANCE_TRAVAIL_CLIENT_ID / SECRET absents",
+      "collected": 0
+     },
+     "at": "2026-11-16T18:00:02.869000+00:00"
+    },
+    "collect_adzuna": {
+     "status": "skipped",
+     "stats": {
+      "source": "adzuna",
+      "status": "skipped",
+      "reason": "ADZUNA_APP_ID / ADZUNA_APP_KEY absents",
+      "collected": 0
+     },
+     "at": "2026-11-16T18:00:02.910000+00:00"
+    },
+    "collect_remotive": {
+     "status": "success",
+     "stats": {
+      "source": "remotive",
+      "status": "success",
+      "collected": 17,
+      "errors": 0
+     },
+     "at": "2026-11-16T18:00:03.366000+00:00"
+    },
+    "collect_arbeitnow": {
+     "status": "success",
+     "stats": {
+      "source": "arbeitnow",
+      "status": "success",
+      "collected": 900,
+      "errors": 0
+     },
+     "at": "2026-11-16T18:00:07.038000+00:00"
+    },
+    "collect_jobicy": {
+     "status": "success",
+     "stats": {
+      "source": "jobicy",
+      "status": "success",
+      "collected": 378,
+      "errors": 0
+     },
+     "at": "2026-11-16T18:00:11.051000+00:00"
+    },
+    "collect_pythonorg": {
+     "status": "success",
+     "stats": {
+      "source": "pythonorg",
+      "status": "success",
+      "collected": 21,
+      "errors": 0
+     },
+     "at": "2026-11-16T18:00:27.073000+00:00"
+    },
+    "ingest_to_datalake": {
+     "status": "success",
+     "stats": {
+      "messages": 1316,
+      "invalid": 0,
+      "files": {
+       "remotive": {
+        "key": "raw/remotive/2026-11-16/batch_20261116T120000.jsonl",
+        "records": 17
+       },
+       "jobicy": {
+        "key": "raw/jobicy/2026-11-16/batch_20261116T120000.jsonl",
+        "records": 378
+       },
+       "arbeitnow": {
+        "key": "raw/arbeitnow/2026-11-16/batch_20261116T120000.jsonl",
+        "records": 900
+       },
+       "pythonorg": {
+        "key": "raw/pythonorg/2026-11-16/batch_20261116T120000.jsonl",
+        "records": 21
+       }
+      },
+      "date": "2026-11-16"
+     },
+     "at": "2026-11-16T18:00:46.452000+00:00"
+    },
+    "spark_etl_quality": {
+     "status": "success",
+     "stats": {
+      "run_id": "20261116T120000",
+      "date": "2026-11-16",
+      "created_at": "2026-11-16T18:01:30.848676+00:00",
+      "records_total": 1316,
+      "records_valid": 1316,
+      "records_quarantine": 0,
+      "duplicates_removed": 21,
+      "records_processed": 1295,
+      "uniqueness_ok": true,
+      "avg_completeness": 0.795,
+      "processed_prefix": "processed/jobs/2026-11-16/20261116T120000/"
+     },
+     "at": "2026-11-16T18:01:31.075000+00:00"
+    },
+    "load_mongodb": {
+     "status": "success",
+     "stats": {
+      "run_id": "20261116T120000",
+      "status": "success",
+      "inserted": 0,
+      "updated": 1295,
+      "total_jobs": 1295
+     },
+     "at": "2026-11-16T18:01:35.703000+00:00"
+    },
+    "ml_enrich_industry": {
+     "status": "success",
+     "stats": {
+      "status": "success",
+      "predicted": 341,
+      "candidates": 887
+     },
+     "at": "2026-11-16T18:01:40.258000+00:00"
+    },
+    "spark_analytics_kpis": {
+     "status": "success",
+     "stats": {
+      "run_id": "20261116T120000",
+      "created_at": "2026-11-16T18:02:16.164337+00:00",
+      "total_jobs": 1295,
+      "companies": 667,
+      "countries": 25,
+      "sources": 4,
+      "remote_jobs": 483,
+      "jobs_with_salary": 219,
+      "median_salary_eur": 115000.0,
+      "technologies": 96,
+      "skills": 35
+     },
+     "at": "2026-11-16T18:02:16.215000+00:00"
+    },
+    "refresh_semantic_index": {
+     "status": "success",
+     "stats": {
+      "status_code": 202,
+      "body": "{\"status\":\"scheduled\",\"by\":\"pipeline\"}"
+     },
+     "at": "2026-11-16T18:02:17.873000+00:00"
+    }
+   },
+   "updated_at": "2026-11-16T18:02:17.873000+00:00"
+  },
+  {
+   "run_id": "20261116T175546",
+   "started_at": "2026-11-16T17:55:50.053000+00:00",
+   "tasks": {
+    "collect_adzuna": {
+     "status": "skipped",
+     "stats": {
+      "source": "adzuna",
+      "status": "skipped",
+      "reason": "ADZUNA_APP_ID / ADZUNA_APP_KEY absents",
+      "collected": 0
+     },
+     "at": "2026-11-16T17:55:50.053000+00:00"
+    },
+    "collect_france_travail": {
+     "status": "skipped",
+     "stats": {
+      "source": "france_travail",
+      "status": "skipped",
+      "reason": "FRANCE_TRAVAIL_CLIENT_ID / SECRET absents",
+      "collected": 0
+     },
+     "at": "2026-11-16T17:55:50.112000+00:00"
+    },
+    "collect_remotive": {
+     "status": "success",
+     "stats": {
+      "source": "remotive",
+      "status": "success",
+      "collected": 17,
+      "errors": 0
+     },
+     "at": "2026-11-16T17:55:50.385000+00:00"
+    },
+    "collect_arbeitnow": {
+     "status": "success",
+     "stats": {
+      "source": "arbeitnow",
+      "status": "success",
+      "collected": 900,
+      "errors": 0
+     },
+     "at": "2026-11-16T17:55:54.187000+00:00"
+    },
+    "collect_jobicy": {
+     "status": "success",
+     "stats": {
+      "source": "jobicy",
+      "status": "success",
+      "collected": 378,
+      "errors": 0
+     },
+     "at": "2026-11-16T17:55:57.886000+00:00"
+    },
+    "collect_pythonorg": {
+     "status": "success",
+     "stats": {
+      "source": "pythonorg",
+      "status": "success",
+      "collected": 21,
+      "errors": 0
+     },
+     "at": "2026-11-16T17:56:14.021000+00:00"
+    },
+    "ingest_to_datalake": {
+     "status": "success",
+     "stats": {
+      "messages": 1316,
+      "invalid": 0,
+      "files": {
+       "remotive": {
+        "key": "raw/remotive/2026-11-16/batch_20261116T175546.jsonl",
+        "records": 17
+       },
+       "jobicy": {
+        "key": "raw/jobicy/2026-11-16/batch_20261116T175546.jsonl",
+        "records": 378
+       },
+       "arbeitnow": {
+        "key": "raw/arbeitnow/2026-11-16/batch_20261116T175546.jsonl",
+        "records": 900
+       },
+       "pythonorg": {
+        "key": "raw/pythonorg/2026-11-16/batch_20261116T175546.jsonl",
+        "records": 21
+       }
+      },
+      "date": "2026-11-16"
+     },
+     "at": "2026-11-16T17:56:31.547000+00:00"
+    },
+    "spark_etl_quality": {
+     "status": "success",
+     "stats": {
+      "run_id": "20261116T175546",
+      "date": "2026-11-16",
+      "created_at": "2026-11-16T17:57:07.823784+00:00",
+      "records_total": 1316,
+      "records_valid": 1316,
+      "records_quarantine": 0,
+      "duplicates_removed": 21,
+      "records_processed": 1295,
+      "uniqueness_ok": true,
+      "avg_completeness": 0.795,
+      "processed_prefix": "processed/jobs/2026-11-16/20261116T175546/"
+     },
+     "at": "2026-11-16T17:57:07.980000+00:00"
+    },
+    "load_mongodb": {
+     "status": "success",
+     "stats": {
+      "run_id": "20261116T175546",
+      "status": "success",
+      "inserted": 26,
+      "updated": 1269,
+      "total_jobs": 1295
+     },
+     "at": "2026-11-16T17:57:12.132000+00:00"
+    },
+    "ml_enrich_industry": {
+     "status": "success",
+     "stats": {
+      "status": "skipped",
+      "reason": "modèle non entraîné"
+     },
+     "at": "2026-11-16T17:57:14.863000+00:00"
+    },
+    "spark_analytics_kpis": {
+     "status": "success",
+     "stats": {
+      "run_id": "20261116T175546",
+      "created_at": "2026-11-16T17:57:44.605163+00:00",
+      "total_jobs": 1295,
+      "companies": 667,
+      "countries": 25,
+      "sources": 4,
+      "remote_jobs": 483,
+      "jobs_with_salary": 219,
+      "median_salary_eur": 115000.0,
+      "technologies": 96,
+      "skills": 35
+     },
+     "at": "2026-11-16T17:57:44.645000+00:00"
+    },
+    "refresh_semantic_index": {
+     "status": "success",
+     "stats": {
+      "status_code": 202,
+      "body": "{\"status\":\"scheduled\",\"by\":\"pipeline\"}"
+     },
+     "at": "2026-11-16T17:57:46.890000+00:00"
+    }
+   },
+   "updated_at": "2026-11-16T17:57:46.890000+00:00"
+  },
+  {
+   "run_id": "20261116T060000",
+   "started_at": "2026-11-16T17:41:03.607000+00:00",
+   "tasks": {
+    "collect_france_travail": {
+     "status": "skipped",
+     "stats": {
+      "source": "france_travail",
+      "status": "skipped",
+      "reason": "FRANCE_TRAVAIL_CLIENT_ID / SECRET absents",
+      "collected": 0
+     },
+     "at": "2026-11-16T17:41:03.607000+00:00"
+    },
+    "collect_remotive": {
+     "status": "success",
+     "stats": {
+      "source": "remotive",
+      "status": "success",
+      "collected": 17,
+      "errors": 0
+     },
+     "at": "2026-11-16T17:41:03.605000+00:00"
+    },
+    "collect_adzuna": {
+     "status": "skipped",
+     "stats": {
+      "source": "adzuna",
+      "status": "skipped",
+      "reason": "ADZUNA_APP_ID / ADZUNA_APP_KEY absents",
+      "collected": 0
+     },
+     "at": "2026-11-16T17:41:03.606000+00:00"
+    },
+    "collect_arbeitnow": {
+     "status": "success",
+     "stats": {
+      "source": "arbeitnow",
+      "status": "success",
+      "collected": 874,
+      "errors": 0
+     },
+     "at": "2026-11-16T17:41:06.683000+00:00"
+    },
+    "collect_jobicy": {
+     "status": "success",
+     "stats": {
+      "source": "jobicy",
+      "status": "success",
+      "collected": 378,
+      "errors": 0
+     },
+     "at": "2026-11-16T17:41:10.782000+00:00"
+    },
+    "collect_pythonorg": {
+     "status": "failed",
+     "stats": {
+      "error": "404 Client Error: Not Found for url: https://www.python.org/jobs/?page=2"
+     },
+     "at": "2026-11-16T17:53:03.630000+00:00"
+    },
+    "ingest_to_datalake": {
+     "status": "success",
+     "stats": {
+      "messages": 1332,
+      "invalid": 0,
+      "files": {
+       "remotive": {
+        "key": "raw/remotive/2026-11-16/batch_20261116T060000.jsonl",
+        "records": 17
+       },
+       "arbeitnow": {
+        "key": "raw/arbeitnow/2026-11-16/batch_20261116T060000.jsonl",
+        "records": 874
+       },
+       "jobicy": {
+        "key": "raw/jobicy/2026-11-16/batch_20261116T060000.jsonl",
+        "records": 378
+       },
+       "pythonorg": {
+        "key": "raw/pythonorg/2026-11-16/batch_20261116T060000.jsonl",
+        "records": 63
+       }
+      },
+      "date": "2026-11-16"
+     },
+     "at": "2026-11-16T17:53:23.834000+00:00"
+    },
+    "spark_etl_quality": {
+     "status": "success",
+     "stats": {
+      "run_id": "20261116T060000",
+      "date": "2026-11-16",
+      "created_at": "2026-11-16T17:53:59.520651+00:00",
+      "records_total": 1332,
+      "records_valid": 1332,
+      "records_quarantine": 0,
+      "duplicates_removed": 63,
+      "records_processed": 1269,
+      "uniqueness_ok": true,
+      "avg_completeness": 0.796,
+      "processed_prefix": "processed/jobs/2026-11-16/20261116T060000/"
+     },
+     "at": "2026-11-16T17:53:59.653000+00:00"
+    },
+    "load_mongodb": {
+     "status": "success",
+     "stats": {
+      "run_id": "20261116T060000",
+      "status": "success",
+      "inserted": 1269,
+      "updated": 0,
+      "total_jobs": 1269
+     },
+     "at": "2026-11-16T17:54:04.480000+00:00"
+    },
+    "ml_enrich_industry": {
+     "status": "success",
+     "stats": {
+      "status": "skipped",
+      "reason": "modèle non entraîné"
+     },
+     "at": "2026-11-16T17:54:06.890000+00:00"
+    },
+    "spark_analytics_kpis": {
+     "status": "success",
+     "stats": {
+      "run_id": "20261116T060000",
+      "created_at": "2026-11-16T17:54:33.643561+00:00",
+      "total_jobs": 1269,
+      "companies": 650,
+      "countries": 25,
+      "sources": 4,
+      "remote_jobs": 481,
+      "jobs_with_salary": 219,
+      "median_salary_eur": 115000.0,
+      "technologies": 95,
+      "skills": 35
+     },
+     "at": "2026-11-16T17:54:33.679000+00:00"
+    },
+    "refresh_semantic_index": {
+     "status": "success",
+     "stats": {
+      "status_code": 202,
+      "body": "{\"status\":\"scheduled\",\"by\":\"pipeline\"}"
+     },
+     "at": "2026-11-16T17:54:35.415000+00:00"
+    }
+   },
+   "updated_at": "2026-11-16T17:54:35.415000+00:00"
+  }
+ ],
+ "ml_predicted": 1342,
+ "embeddings": 6297,
+ "cv_demo": {
+  "cv_technologies": [
+   "Apache Airflow",
+   "Apache Kafka",
+   "Apache Spark",
+   "Docker",
+   "MongoDB",
+   "Power BI",
+   "Python",
+   "SQL"
+  ],
+  "cv_skills": [
+   "Anglais",
+   "Data Engineering",
+   "Travail en équipe"
+  ],
+  "results": [
+   {
+    "dedup_key": "a5c9effc3a302caf80f13f04f72cf562f030d629",
+    "city": null,
+    "company": "Odette Technologies",
+    "contract_type": null,
+    "country": "États-Unis",
+    "experience_level": null,
+    "industry": "Développement logiciel",
+    "publication_date": "2026-11-05",
+    "remote": true,
+    "salary_annual_max_eur": null,
+    "salary_annual_min_eur": null,
+    "skills": [
+     "Data Visualization",
+     "Machine Learning",
+     "NLP",
+     "Statistics"
+    ],
+    "source": "pythonorg",
+    "technologies": [
+     "Python"
+    ],
+    "title": "Data/ML Engineer (Python)",
+    "url": "https://www.python.org/jobs/8205/",
+    "score": 0.7566,
+    "semantic_score": 0.6523,
+    "skill_overlap": 1.0,
+    "matched_technologies": [
+     "Python"
+    ],
+    "missing_technologies": []
+   },
+   {
+    "dedup_key": "155f10bcb250fad1f8f4943a30ee8f8ba1ab9b9f",
+    "city": "Paris",
+    "company": "Sopra Steria",
+    "contract_type": null,
+    "country": "France",
+    "experience_level": null,
+    "industry": "Data & IA",
+    "publication_date": "2026-11-15",
+    "remote": false,
+    "salary_annual_max_eur": null,
+    "salary_annual_min_eur": null,
+    "skills": [
+     "Data Engineering"
+    ],
+    "source": "wttj",
+    "technologies": [
+     "Apache Spark"
+    ],
+    "title": "Data Engineer Pyspark Data Factory Services Financiers Ile De France",
+    "url": "https://www.welcometothejungle.com/fr/companies/sopra-steria/jobs/data-engineer-pyspark-data-factory-services-financiers-ile-de-france_paris_SS_kzpMm7w",
+    "score": 0.7193,
+    "semantic_score": 0.599,
+    "skill_overlap": 1.0,
+    "matched_technologies": [
+     "Apache Spark"
+    ],
+    "missing_technologies": []
+   },
+   {
+    "dedup_key": "510bbb9bf06f42ef0b0957bb3f2d16f0d094e77b",
+    "city": "Paris",
+    "company": "Artefactlinkedin",
+    "contract_type": null,
+    "country": "France",
+    "experience_level": "junior",
+    "industry": null,
+    "publication_date": "2026-11-14",
+    "remote": false,
+    "salary_annual_max_eur": null,
+    "salary_annual_min_eur": null,
+    "skills": [
+     "Agile / Scrum",
+     "Anglais",
+     "Computer Vision",
+     "Data Analysis",
+     "Data Engineering",
+     "Data Modeling",
+     "Digital Marketing",
+     "Gestion du temps",
+     "Machine Learning",
+     "NLP",
+     "Résolution de problèmes"
+    ],
+    "source": "arbeitnow",
+    "technologies": [
+     "Python",
+     "SQL"
+    ],
+    "title": "Junior Data Scientist - Casablanca",
+    "url": "https://www.arbeitnow.fr/jobs/companies/artefactlinkedin/junior-data-scientist-casablanca-9th-arrondissement-of-paris-75009-paris-484185",
+    "score": 0.6891,
+    "semantic_score": 0.5558,
+    "skill_overlap": 1.0,
+    "matched_technologies": [
+     "Python",
+     "SQL"
+    ],
+    "missing_technologies": []
+   },
+   {
+    "dedup_key": "d84c6bdf629f39d3219cb8bcd145c7f7e85f68bd",
+    "city": "Zurich",
+    "company": "coni+partner AG",
+    "contract_type": "contract",
+    "country": "Suisse",
+    "experience_level": "mid",
+    "industry": null,
+    "publication_date": "2026-11-14",
+    "remote": false,
+    "salary_annual_max_eur": null,
+    "salary_annual_min_eur": null,
+    "skills": [
+     "Allemand",
+     "Anglais",
+     "Autonomie",
+     "Customer Support",
+     "Data Analysis",
+     "Travail en équipe"
+    ],
+    "source": "arbeitnow",
+    "technologies": [
+     "Python",
+     "SQL"
+    ],
+    "title": "Data Scientist Fund Data & Offers",
+    "url": "https://www.arbeitnow.ch/jobs/companies/conipartner-ag/data-scientist-fund-data-offers-zurich-468392",
+    "score": 0.6835,
+    "semantic_score": 0.5479,
+    "skill_overlap": 1.0,
+    "matched_technologies": [
+     "Python",
+     "SQL"
+    ],
+    "missing_technologies": []
+   },
+   {
+    "dedup_key": "641f33b69f5979586a2b16b80ac143b1fc940938",
+    "city": "Cologne",
+    "company": "Polarstern Experts",
+    "contract_type": "full_time",
+    "country": "Allemagne",
+    "experience_level": "senior",
+    "industry": "Data & IA",
+    "publication_date": "2026-11-16",
+    "remote": false,
+    "salary_annual_max_eur": null,
+    "salary_annual_min_eur": null,
+    "skills": [
+     "Adaptabilité",
+     "Allemand",
+     "Data Engineering"
+    ],
+    "source": "arbeitnow",
+    "technologies": [
+     "Apache Spark",
+     "Databricks",
+     "ETL",
+     "Python",
+     "SQL"
+    ],
+    "title": "Senior Data Engineer (m/w/d)",
+    "url": "https://www.arbeitnow.com/jobs/companies/polarstern-experts/senior-data-engineer-cologne-405700",
+    "score": 0.6622,
+    "semantic_score": 0.6888,
+    "skill_overlap": 0.6,
+    "matched_technologies": [
+     "Apache Spark",
+     "Python",
+     "SQL"
+    ],
+    "missing_technologies": [
+     "Databricks",
+     "ETL"
+    ]
+   }
+  ],
+  "recommended_skills": [
+   {
+    "technology": "Databricks",
+    "in_jobs": 1
+   },
+   {
+    "technology": "ETL",
+    "in_jobs": 1
+   }
+  ]
+ },
+ "search_demo": {
+  "query": "ingénieur données cloud",
+  "results": [
+   {
+    "dedup_key": "3f84a9ab3c623fea0c80ae96ece18c82f3c9405e",
+    "city": "Carquefou",
+    "company": "Thales",
+    "contract_type": null,
+    "country": "France",
+    "experience_level": null,
+    "industry": null,
+    "publication_date": "2026-11-15",
+    "remote": false,
+    "salary_annual_max_eur": null,
+    "salary_annual_min_eur": null,
+    "skills": [],
+    "source": "wttj",
+    "technologies": [],
+    "title": "Ingenieur Cloud Ops",
+    "url": "https://www.welcometothejungle.com/fr/companies/thales/jobs/ingenieur-cloud-ops-f-h_carquefou_THALE_XK8R87a",
+    "score": 0.8406
+   },
+   {
+    "dedup_key": "dd8df83f1d352dae00c2bc5b73c4c2365e48c8fa",
+    "city": "Velizy Villacoublay",
+    "company": "Thales",
+    "contract_type": null,
+    "country": "France",
+    "experience_level": null,
+    "industry": null,
+    "publication_date": "2026-11-15",
+    "remote": false,
+    "salary_annual_max_eur": null,
+    "salary_annual_min_eur": null,
+    "skills": [],
+    "source": "wttj",
+    "technologies": [],
+    "title": "Architecte Data Cloud",
+    "url": "https://www.welcometothejungle.com/fr/companies/thales/jobs/architecte-data-cloud-h-f_velizy-villacoublay_THALE_4LLRMLQ",
+    "score": 0.8178
+   },
+   {
+    "dedup_key": "78fd4dcf3b3351d62c5790108676a0e4bc5a5157",
+    "city": "Toulouse",
+    "company": "Capgemini",
+    "contract_type": null,
+    "country": "France",
+    "experience_level": null,
+    "industry": "Développement logiciel",
+    "publication_date": "2026-11-10",
+    "remote": false,
+    "salary_annual_max_eur": null,
+    "salary_annual_min_eur": null,
+    "skills": [],
+    "source": "wttj",
+    "technologies": [
+     "AWS"
+    ],
+    "title": "Cloud Engineer AWS",
+    "url": "https://www.welcometothejungle.com/fr/companies/capgemini/jobs/cloud-engineer-aws_toulouse_CAPGE_1lOL8rM",
+    "score": 0.8157
+   },
+   {
+    "dedup_key": "183e379228249dda17a3dd3042241befff77352e",
+    "city": "Bordeaux",
+    "company": "Thales",
+    "contract_type": null,
+    "country": "France",
+    "experience_level": null,
+    "industry": null,
+    "publication_date": "2026-11-15",
+    "remote": false,
+    "salary_annual_max_eur": null,
+    "salary_annual_min_eur": null,
+    "skills": [],
+    "source": "wttj",
+    "technologies": [],
+    "title": "Ingenieur Cloudops",
+    "url": "https://www.welcometothejungle.com/fr/companies/thales/jobs/ingenieur-cloudops_bordeaux_THALE_V0Jxaex",
+    "score": 0.7886
+   },
+   {
+    "dedup_key": "fa8ca6aa6db5f1d9f6dade5e70625051c6388197",
+    "city": "Gennevilliers",
+    "company": "Up Coop",
+    "contract_type": null,
+    "country": "France",
+    "experience_level": null,
+    "industry": null,
+    "publication_date": "2026-11-15",
+    "remote": false,
+    "salary_annual_max_eur": null,
+    "salary_annual_min_eur": null,
+    "skills": [],
+    "source": "wttj",
+    "technologies": [],
+    "title": "Ingenieur Systeme Automatisation Cloud Gennevilliers",
+    "url": "https://www.welcometothejungle.com/fr/companies/up-coop/jobs/ingenieur-systeme-automatisation-cloud-gennevilliers-h-f_gennevilliers",
+    "score": 0.7791
+   }
+  ]
+ }
+}

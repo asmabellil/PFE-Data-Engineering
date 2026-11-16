@@ -1,0 +1,34 @@
+# secrets
+.env
+*.pem
+*.key
+
+# données et artefacts générés
+data/
+exports/*.csv
+models/*.joblib
+models/*.pt
+models/*.json
+!exports/.gitkeep
+!models/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# Node
+node_modules/
+frontend/dist/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Power BI (le .pbix est versionné volontairement s'il est < 50 Mo – retirer la ligne sinon)
+# *.pbix

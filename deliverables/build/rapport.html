@@ -1,0 +1,1012 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><title>Rapport PFE JobInsight</title><style>
+@page { size: A4; margin: 2.2cm 2cm 2.2cm 2cm;
+  @bottom-right { content: counter(page); font: 9pt 'Segoe UI', sans-serif; color: #7a8599; }
+  @bottom-left { content: "JobInsight – Rapport de PFE"; font: 9pt 'Segoe UI', sans-serif; color: #7a8599; } }
+@page :first { @bottom-right { content: none; } @bottom-left { content: none; } }
+body { font-family: 'Segoe UI', Calibri, Arial, sans-serif; font-size: 10.5pt; line-height: 1.5; color: #172033; }
+h1 { font-size: 21pt; color: #1d4ed8; border-bottom: 2px solid #2563eb; padding-bottom: 4px; page-break-before: always; margin-top: 0; }
+h2 { font-size: 14pt; color: #1e3a8a; margin-top: 20px; page-break-after: avoid; }
+h3 { font-size: 12pt; page-break-after: avoid; }
+p, li { text-align: justify; }
+table { border-collapse: collapse; width: 100%; margin: 10px 0 14px; font-size: 9pt; page-break-inside: avoid; }
+th { background: #e8efff; color: #1e3a8a; text-align: left; }
+th, td { border: 1px solid #c9d3e3; padding: 4px 7px; vertical-align: top; }
+code { font-family: Consolas, monospace; font-size: 8.8pt; background: #f0f3f9; padding: 0 3px; border-radius: 3px; }
+pre { background: #f5f7fb; border: 1px solid #e3e8f0; border-left: 3px solid #2563eb; padding: 8px 10px;
+      font-size: 8.3pt; line-height: 1.35; white-space: pre-wrap; page-break-inside: avoid; }
+pre code { background: none; padding: 0; }
+img { max-width: 100%; display: block; margin: 10px auto; page-break-inside: avoid; }
+p:has(> img) { text-align: center; }
+blockquote { border-left: 4px solid #2563eb; background: #f5f8ff; margin: 12px 0; padding: 6px 14px; color: #1e3a8a; }
+.cover { text-align: center; padding-top: 2.5cm; }
+.cover .cover-title, .cover h1 { page-break-before: avoid; border: none; font-size: 46pt; color: #2563eb; margin: 40px 0 10px; }
+.cover .cover-h2, .cover h2 { font-size: 18pt; color: #172033; margin: 0 1cm 30px; }
+.cover-top { color: #7a8599; font-size: 11pt; }
+.cover-sub { font-size: 14pt; color: #7a8599; margin-bottom: 70px; }
+.cover table { width: 70%; margin: 0 auto; font-size: 11pt; }
+.cover-bottom { margin-top: 90px; color: #7a8599; }
+.toc-page h1, .toc-title { page-break-before: always; font-size: 21pt; color: #1d4ed8; border-bottom: 2px solid #2563eb; }
+.toc ul { list-style: none; padding-left: 0; } .toc ul ul { padding-left: 22px; }
+.toc li { margin: 3px 0; text-align: left; } .toc a { color: #172033; text-decoration: none; }
+.toc > ul > li > a { font-weight: 600; }
+</style></head><body><div class="cover">
+<div class="cover-top">Master 2 Data Engineering · Projet de Fin d'Études · Année universitaire 2026–2027</div>
+<h1 class="cover-title" id="jobinsight">JobInsight</h1>
+<h2 class="cover-h2" id="conception-et-realisation-dune-plateforme-big-data-de-collecte-et-danalyse-des-offres-demploi">Conception et réalisation d'une plateforme Big Data de collecte et d'analyse des offres d'emploi</h2>
+<div class="cover-sub">Rapport final</div>
+<table>
+<thead>
+<tr>
+<th>Membre</th>
+<th>Rôle principal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Asma BELLIL</td>
+<td><em>à compléter</em></td>
+</tr>
+<tr>
+<td>Ghaylene DRIDI</td>
+<td><em>à compléter</em></td>
+</tr>
+<tr>
+<td>Mohamed Yacine BRAHMIA</td>
+<td><em>à compléter</em></td>
+</tr>
+</tbody>
+</table>
+<div class="cover-bottom">Encadrant : à compléter · Date de remise : 4 décembre 2026</div>
+</div>
+<div class="toc-page">
+<h1 class="toc-title" id="sommaire">Sommaire</h1>
+<div class="toc">
+<ul>
+<li><a href="#jobinsight">JobInsight</a><ul>
+<li><a href="#conception-et-realisation-dune-plateforme-big-data-de-collecte-et-danalyse-des-offres-demploi">Conception et réalisation d'une plateforme Big Data de collecte et d'analyse des offres d'emploi</a></li>
+</ul>
+</li>
+<li><a href="#sommaire">Sommaire</a></li>
+<li><a href="#introduction">Introduction</a><ul>
+<li><a href="#contexte">Contexte</a></li>
+<li><a href="#problematique">Problématique</a></li>
+<li><a href="#objectifs">Objectifs</a></li>
+<li><a href="#demarche-et-organisation">Démarche et organisation</a></li>
+<li><a href="#architecture-generale">Architecture générale</a></li>
+</ul>
+</li>
+<li><a href="#chapitre-1-stocker-collecter-ingerer-et-conserver-la-donnee">Chapitre 1 – Stocker : collecter, ingérer et conserver la donnée</a><ul>
+<li><a href="#11-etude-des-sources-et-cadre-legal">1.1 Étude des sources et cadre légal</a></li>
+<li><a href="#12-collecte">1.2 Collecte</a></li>
+<li><a href="#13-ingestion-avec-apache-kafka">1.3 Ingestion avec Apache Kafka</a></li>
+<li><a href="#14-data-lake-minio">1.4 Data Lake MinIO</a></li>
+<li><a href="#15-entrepot-mongodb">1.5 Entrepôt MongoDB</a></li>
+<li><a href="#16-conteneurisation">1.6 Conteneurisation</a></li>
+</ul>
+</li>
+<li><a href="#chapitre-2-analyser-traiter-controler-et-exploiter-la-donnee">Chapitre 2 – Analyser : traiter, contrôler et exploiter la donnée</a><ul>
+<li><a href="#21-orchestration-avec-apache-airflow">2.1 Orchestration avec Apache Airflow</a></li>
+<li><a href="#22-traitement-avec-apache-spark">2.2 Traitement avec Apache Spark</a></li>
+<li><a href="#23-qualite-des-donnees">2.3 Qualité des données</a></li>
+<li><a href="#24-deduplication">2.4 Déduplication</a></li>
+<li><a href="#25-indicateurs-et-premiers-resultats">2.5 Indicateurs et premiers résultats</a></li>
+</ul>
+</li>
+<li><a href="#chapitre-3-visualiser-restituer-la-donnee">Chapitre 3 – Visualiser : restituer la donnée</a><ul>
+<li><a href="#31-application-web-react">3.1 Application web React</a></li>
+<li><a href="#32-api-fastapi">3.2 API FastAPI</a></li>
+<li><a href="#33-reporting-power-bi">3.3 Reporting Power BI</a></li>
+</ul>
+</li>
+<li><a href="#chapitre-4-securite">Chapitre 4 – Sécurité</a><ul>
+<li><a href="#41-authentification-et-autorisation">4.1 Authentification et autorisation</a></li>
+<li><a href="#42-protection-des-echanges">4.2 Protection des échanges</a></li>
+<li><a href="#43-infrastructure">4.3 Infrastructure</a></li>
+<li><a href="#44-donnees-personnelles-et-conformite">4.4 Données personnelles et conformité</a></li>
+<li><a href="#45-verification">4.5 Vérification</a></li>
+</ul>
+</li>
+<li><a href="#chapitre-5-intelligence-artificielle-appliquee-a-lanalyse-des-donnees">Chapitre 5 – Intelligence artificielle appliquée à l'analyse des données</a><ul>
+<li><a href="#51-classification-du-secteur">5.1 Classification du secteur</a></li>
+<li><a href="#52-estimation-du-salaire">5.2 Estimation du salaire</a></li>
+<li><a href="#53-familles-de-metiers-clustering">5.3 Familles de métiers (clustering)</a></li>
+<li><a href="#54-recherche-semantique-deep-learning">5.4 Recherche sémantique (deep learning)</a></li>
+<li><a href="#55-matching-cv-offres">5.5 Matching CV ↔ offres</a></li>
+<li><a href="#56-reseau-de-neurones-comparaison-ml-dl">5.6 Réseau de neurones : comparaison ML / DL</a></li>
+<li><a href="#57-limites">5.7 Limites</a></li>
+</ul>
+</li>
+<li><a href="#conclusion">Conclusion</a><ul>
+<li><a href="#bilan">Bilan</a></li>
+<li><a href="#competences-de-data-engineering-mobilisees">Compétences de data engineering mobilisées</a></li>
+<li><a href="#difficultes-rencontrees">Difficultés rencontrées</a></li>
+<li><a href="#perspectives">Perspectives</a></li>
+</ul>
+</li>
+<li><a href="#annexes">Annexes</a><ul>
+<li><a href="#a-lancer-la-plateforme">A. Lancer la plateforme</a></li>
+<li><a href="#b-organisation-du-code">B. Organisation du code</a></li>
+<li><a href="#c-tests">C. Tests</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<h1 id="introduction">Introduction</h1>
+<h2 id="contexte">Contexte</h2>
+<p>Le marché de l'emploi produit chaque jour un volume considérable d'offres publiées sur des plateformes de recrutement, des sites d'entreprises et des agrégateurs. Ces offres constituent une source de données riche : elles révèlent les compétences et technologies recherchées, la géographie des besoins, les niveaux d'expérience attendus, les types de contrat et, lorsqu'ils sont publiés, les niveaux de rémunération.</p>
+<p>Exploiter ces données suppose toutefois de résoudre un problème d'ingénierie : les offres sont dispersées, publiées dans des formats hétérogènes (API JSON, pages HTML, sitemaps XML), dans plusieurs langues, avec une qualité très variable et de nombreux doublons d'une plateforme à l'autre.</p>
+<h2 id="problematique">Problématique</h2>
+<blockquote>
+<p><strong>Comment concevoir une plateforme Big Data capable de collecter automatiquement des offres d'emploi provenant de plusieurs sources, de traiter et normaliser ces données, puis de fournir des analyses pertinentes sur les tendances du marché de l'emploi ?</strong></p>
+</blockquote>
+<h2 id="objectifs">Objectifs</h2>
+<p>L'objectif principal est de couvrir <strong>l'ensemble du cycle de vie de la donnée</strong> :</p>
+<p><code>Collecte → Ingestion → Stockage → Nettoyage → Transformation → Analyse → Visualisation</code></p>
+<p>Objectifs fonctionnels : collecter des offres de plusieurs sources, les centraliser, détecter les doublons, nettoyer et normaliser, extraire les compétences et technologies, analyser les offres par localisation, secteur, expérience et salaire, identifier les tendances et restituer les résultats dans des tableaux de bord.</p>
+<p>Objectifs techniques : collecte automatisée, pipeline fiable et <strong>rejouable</strong>, stockage adapté à l'historisation, traitements distribués, contrôles de qualité automatiques, architecture modulaire et conteneurisée, orchestration et supervision.</p>
+<h2 id="demarche-et-organisation">Démarche et organisation</h2>
+<p>Le projet a suivi une démarche <strong>Agile</strong> en sprints courts (analyse et conception, collecte et ingestion, traitement et qualité, analyse, visualisation, IA, sécurité, stabilisation). Le livrable 1 a fixé le cadrage (périmètre, utilisateurs cibles, architecture fonctionnelle, modèle de données, KPIs, risques). Le présent rapport décrit la réalisation, organisée selon les grandes fonctions d'une plateforme de données : <strong>stocker, analyser, visualiser, sécuriser</strong> et <strong>exploiter l'intelligence artificielle</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Membre</th>
+<th>Périmètre</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Membre 1 – Data Collection &amp; Ingestion</td>
+<td>sources, collecteurs, API / scraping, Kafka, gestion des erreurs</td>
+</tr>
+<tr>
+<td>Membre 2 – Data Engineering &amp; Processing</td>
+<td>Data Lake, Spark, nettoyage, déduplication, MongoDB, Docker</td>
+</tr>
+<tr>
+<td>Membre 3 – Data Analysis &amp; Visualization</td>
+<td>KPIs, API analytique, React, Power BI, IA</td>
+</tr>
+</tbody>
+</table>
+<h2 id="architecture-generale">Architecture générale</h2>
+<p><img alt="Architecture de la plateforme JobInsight" src="img/architecture.png" /></p>
+<p>La plateforme est entièrement conteneurisée (8 services Docker) et orchestrée par Apache Airflow. Le tableau suivant relie chaque couche de l'architecture fonctionnelle du livrable 1 à la technologie retenue.</p>
+<table>
+<thead>
+<tr>
+<th>Couche</th>
+<th>Technologie</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Collecte</td>
+<td>Python (<code>requests</code>, <code>BeautifulSoup</code>)</td>
+<td>API, sitemap et scraping autorisés</td>
+</tr>
+<tr>
+<td>Ingestion</td>
+<td>Apache Kafka 3.9 (KRaft)</td>
+<td>tampon fiable, rejouable</td>
+</tr>
+<tr>
+<td>Data Lake</td>
+<td>MinIO (compatible S3)</td>
+<td>zones raw / processed / quarantine / gold</td>
+</tr>
+<tr>
+<td>Traitement</td>
+<td>Apache Spark 3.5 (PySpark)</td>
+<td>nettoyage, enrichissement, qualité, déduplication, KPIs</td>
+</tr>
+<tr>
+<td>Entrepôt / service</td>
+<td>MongoDB 7</td>
+<td>données consolidées, historisées, indexées</td>
+</tr>
+<tr>
+<td>Orchestration</td>
+<td>Apache Airflow 2.10</td>
+<td>planification, dépendances, retries, monitoring</td>
+</tr>
+<tr>
+<td>API</td>
+<td>FastAPI</td>
+<td>accès sécurisé aux données et aux modèles</td>
+</tr>
+<tr>
+<td>Visualisation</td>
+<td>React 18 + Recharts, Power BI</td>
+<td>application web, reporting analyste</td>
+</tr>
+<tr>
+<td>IA</td>
+<td>scikit-learn, Sentence-Transformers, PyTorch</td>
+<td>classification, régression, clustering, recherche sémantique</td>
+</tr>
+<tr>
+<td>Infrastructure</td>
+<td>Docker Compose</td>
+<td>déploiement reproductible</td>
+</tr>
+</tbody>
+</table>
+<p><strong>État au 16/11/2026</strong> : 6 297 offres consolidées, 1 226 entreprises, 30 pays, 96 technologies et 35 compétences distinctes extraites, 5 sources actives et 5 exécutions du pipeline enregistrées.</p>
+<h1 id="chapitre-1-stocker-collecter-ingerer-et-conserver-la-donnee">Chapitre 1 – Stocker : collecter, ingérer et conserver la donnée</h1>
+<h2 id="11-etude-des-sources-et-cadre-legal">1.1 Étude des sources et cadre légal</h2>
+<p>La première étape a consisté à identifier les sources et à <strong>vérifier leur accessibilité technique et légale</strong>, conformément au principe posé dans le livrable 1 : privilégier les API officielles et ne scraper que lorsque c'est autorisé. Pour chaque plateforme, nous avons analysé le fichier <code>robots.txt</code>, les conditions d'utilisation et le comportement réel des serveurs.</p>
+<table>
+<thead>
+<tr>
+<th>Plateforme</th>
+<th>Accès</th>
+<th>Constat</th>
+<th>Décision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Arbeitnow</td>
+<td>API publique JSON</td>
+<td>usage libre, lien de retour apprécié</td>
+<td><strong>retenue</strong></td>
+</tr>
+<tr>
+<td>Jobicy</td>
+<td>API publique JSON</td>
+<td>attribution et lien vers l'offre exigés ; salaires structurés</td>
+<td><strong>retenue</strong></td>
+</tr>
+<tr>
+<td>Remotive</td>
+<td>API publique JSON</td>
+<td>≤ 4 appels / jour, attribution exigée</td>
+<td><strong>retenue</strong> (planification toutes les 6 h)</td>
+</tr>
+<tr>
+<td>python.org/jobs</td>
+<td>HTML</td>
+<td><code>/jobs/</code> autorisé par robots.txt</td>
+<td><strong>retenue (scraping)</strong></td>
+</tr>
+<tr>
+<td>Welcome to the Jungle</td>
+<td>sitemap XML</td>
+<td>pages de recherche interdites (<code>*/jobs?query=*</code>) ; sitemap des offres publié pour les robots ; fiches protégées (HTTP 403)</td>
+<td><strong>retenue via le sitemap uniquement</strong></td>
+</tr>
+<tr>
+<td>LinkedIn</td>
+<td>—</td>
+<td>robots.txt : <em>« The use of robots or other automated means to access LinkedIn without the express permission of LinkedIn is strictly prohibited »</em>, <code>Disallow: /jobs-guest/</code></td>
+<td><strong>écartée</strong></td>
+</tr>
+<tr>
+<td>Indeed</td>
+<td>—</td>
+<td>protection anti-robot (HTTP 403), scraping interdit par les CGU, API éditeur fermée</td>
+<td><strong>écartée</strong></td>
+</tr>
+<tr>
+<td>Adzuna, France Travail</td>
+<td>API officielles avec clé gratuite</td>
+<td>accès contractuel</td>
+<td><strong>implémentées, activables</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Ce travail d'analyse est un résultat en soi : les plateformes les plus connues (LinkedIn, Indeed) <strong>interdisent explicitement</strong> la collecte automatisée. Contourner ces protections (usurpation de navigateur, rotation d'adresses IP, résolution de CAPTCHA) aurait exposé le projet à des risques juridiques et éthiques. Nous avons donc privilégié des sources ouvertes et une source française majeure, <strong>Welcome to the Jungle</strong>, exploitée dans le strict respect de son <code>robots.txt</code>. Les API Adzuna et France Travail, qui agrègent elles-mêmes de nombreux sites d'emploi, constituent l'alternative légale pour élargir la couverture.</p>
+<p>Volume consolidé par source :</p>
+<p><img alt="Offres par source" src="img/sources.png" /></p>
+<h2 id="12-collecte">1.2 Collecte</h2>
+<p>Chaque source est implémentée par une classe héritant de <code>BaseCollector</code> (architecture <strong>modulaire</strong> : ajouter une source revient à écrire une classe et une fonction de mapping). Chaque offre est encapsulée dans une <strong>enveloppe</strong> qui conserve la réponse d'origine intacte et ajoute les métadonnées de traçabilité :</p>
+<pre><code class="language-json">{&quot;source&quot;: &quot;jobicy&quot;, &quot;source_kind&quot;: &quot;api&quot;, &quot;source_id&quot;: &quot;162628&quot;,
+ &quot;run_id&quot;: &quot;20261116T185238&quot;, &quot;collected_at&quot;: &quot;2026-11-16T18:52:41+00:00&quot;,
+ &quot;payload&quot;: { &quot;...&quot;: &quot;réponse brute de l'API&quot; }}
+</code></pre>
+<p><strong>Fiabilité.</strong> Session HTTP avec <em>retries</em> exponentiels (codes 429 et 5xx, respect de <code>Retry-After</code>), délais d'attente systématiques, pause entre requêtes, dédoublonnage interne à chaque source, isolement des erreurs (une page ou une région en échec n'interrompt pas la collecte).</p>
+<p><strong>Scraping éthique.</strong> Le collecteur python.org vérifie <code>robots.txt</code> avant chaque URL (<code>urllib.robotparser</code>), s'identifie par un User-Agent explicite, limite son débit et <strong>supprime la section « Contact »</strong> des fiches avant stockage (minimisation des données personnelles). Le collecteur Welcome to the Jungle lit uniquement le sitemap XML : l'URL de chaque offre encode l'entreprise, l'intitulé et la ville (<code>/fr/companies/&lt;entreprise&gt;/jobs/&lt;intitulé&gt;_&lt;ville&gt;</code>), et la balise <code>&lt;lastmod&gt;</code> donne sa date de mise à jour. Une fenêtre glissante (7 jours) et un plafond par exécution limitent la charge.</p>
+<h2 id="13-ingestion-avec-apache-kafka">1.3 Ingestion avec Apache Kafka</h2>
+<p>Les collecteurs publient les enveloppes dans le topic <strong><code>jobs.raw</code></strong> (3 partitions, rétention 7 jours). La clé de message <code>source:identifiant</code> garantit qu'une même offre arrive toujours dans la même partition.</p>
+<table>
+<thead>
+<tr>
+<th>Garantie</th>
+<th>Mise en œuvre</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pas de perte</td>
+<td>producteur <code>acks=all</code>, commit des offsets <strong>après</strong> écriture dans le Data Lake (<em>at-least-once</em>)</td>
+</tr>
+<tr>
+<td>Pas de doublon côté producteur</td>
+<td><code>enable.idempotence=true</code></td>
+</tr>
+<tr>
+<td>Rejeu</td>
+<td>rétention de 7 jours, relecture possible depuis un offset</td>
+</tr>
+<tr>
+<td>Découplage</td>
+<td>la collecte fonctionne même si le stockage est indisponible</td>
+</tr>
+<tr>
+<td>Évolutivité</td>
+<td>passage au streaming sans modifier les collecteurs</td>
+</tr>
+</tbody>
+</table>
+<p>Un consommateur <em>batch</em> lit le topic jusqu'à épuisement, regroupe les messages par source et écrit un fichier par source et par lot dans la zone brute du Data Lake.</p>
+<h2 id="14-data-lake-minio">1.4 Data Lake MinIO</h2>
+<p>Le Data Lake suit une organisation en zones (architecture « médaillon ») :</p>
+<pre><code>datalake/                                     (bucket versionné)
+├── raw/&lt;source&gt;/&lt;AAAA-MM-JJ&gt;/batch_&lt;lot&gt;.jsonl      bronze : données brutes, immuables
+├── processed/jobs/&lt;AAAA-MM-JJ&gt;/&lt;lot&gt;/*.parquet      silver : nettoyées, enrichies, dédupliquées
+├── quarantine/&lt;AAAA-MM-JJ&gt;/&lt;lot&gt;/*.parquet          données non conformes
+├── gold/&lt;lot&gt;/&lt;indicateur&gt;/*.parquet                gold : agrégats analytiques
+└── reports/quality/&lt;lot&gt;.json                       rapports de qualité
+</code></pre>
+<p>Conserver le brut garantit la <strong>reproductibilité</strong> (une règle de nettoyage modifiée peut être rejouée sur tout l'historique), l'<strong>audit</strong> et l'<strong>historisation</strong>. Les zones traitées utilisent le format colonnaire <strong>Parquet</strong> (compressé, typé, lisible par Spark, pandas et Power BI). Le bucket est versionné.</p>
+<h2 id="15-entrepot-mongodb">1.5 Entrepôt MongoDB</h2>
+<p>MongoDB constitue la couche <em>processed / warehouse</em> et la base de l'application. Son schéma flexible convient aux offres hétérogènes (tableaux de compétences, salaires optionnels) et ses agrégations alimentent les KPIs en temps réel.</p>
+<table>
+<thead>
+<tr>
+<th>Collection</th>
+<th>Contenu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>jobs</code></td>
+<td>offres consolidées (modèle de données du livrable 1, enrichi)</td>
+</tr>
+<tr>
+<td><code>quality_reports</code>, <code>pipeline_runs</code></td>
+<td>supervision du pipeline</td>
+</tr>
+<tr>
+<td><code>kpi_snapshots</code></td>
+<td>historique des indicateurs globaux</td>
+</tr>
+<tr>
+<td><code>ml_runs</code>, <code>ml_clusters</code>, <code>job_embeddings</code></td>
+<td>intelligence artificielle</td>
+</tr>
+<tr>
+<td><code>users</code>, <code>audit_logs</code></td>
+<td>sécurité</td>
+</tr>
+</tbody>
+</table>
+<p>Le chargement est <strong>idempotent</strong> : chaque offre est insérée ou mise à jour (<em>upsert</em>) sur sa clé de déduplication, avec <code>first_seen_at</code> (première détection), <code>last_seen_at</code>, un compteur d'apparitions et la liste cumulée des sources. Relancer un lot ne crée donc jamais de doublon. Des index couvrent tous les filtres du tableau de bord ainsi qu'une recherche plein texte pondérée (titre, entreprise, description).</p>
+<h2 id="16-conteneurisation">1.6 Conteneurisation</h2>
+<p>Les huit services (PostgreSQL pour Airflow, Airflow avec Spark, Kafka, MinIO, MongoDB, API, front, interface Kafka optionnelle) sont décrits dans un unique fichier <code>docker-compose.yml</code> : volumes persistants, <em>healthchecks</em>, dépendances conditionnelles et limites mémoire permettant de faire tourner la plateforme sur un poste de 8 Go.</p>
+<h1 id="chapitre-2-analyser-traiter-controler-et-exploiter-la-donnee">Chapitre 2 – Analyser : traiter, contrôler et exploiter la donnée</h1>
+<h2 id="21-orchestration-avec-apache-airflow">2.1 Orchestration avec Apache Airflow</h2>
+<p>Le DAG <code>jobinsight_pipeline</code> s'exécute <strong>toutes les six heures</strong> :</p>
+<pre><code>collect_&lt;source&gt; (7 tâches en parallèle)
+      └─► ingest_to_datalake ─► spark_etl_quality ─► load_mongodb
+              ─► ml_enrich_industry ─► spark_analytics_kpis ─► refresh_semantic_index
+</code></pre>
+<p>Chaque tâche dispose de deux nouvelles tentatives avec temporisation exponentielle et d'un délai maximal. L'ingestion utilise la règle <code>ALL_DONE</code> : une source en panne n'empêche pas le traitement des autres (cas rencontré lors de la mise en production avec le collecteur python.org). L'identifiant de lot (horodatage d'exécution) rend chaque exécution <strong>rejouable</strong>. Chaque tâche écrit ses statistiques dans MongoDB, visibles dans la page « Pipeline &amp; qualité ». Un second DAG, <code>jobinsight_ml</code>, ré-entraîne les modèles chaque semaine.</p>
+<h2 id="22-traitement-avec-apache-spark">2.2 Traitement avec Apache Spark</h2>
+<p>Le job Spark lit les fichiers bruts du lot, applique la transformation à chaque offre en parallèle, construit un DataFrame typé (35 colonnes), sépare les offres valides de la quarantaine, déduplique, écrit le Parquet et produit le rapport qualité.</p>
+<table>
+<thead>
+<tr>
+<th>Étape</th>
+<th>Exemples de règles</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Standardisation</td>
+<td>7 formats de source ramenés à un schéma commun</td>
+</tr>
+<tr>
+<td>Nettoyage du texte</td>
+<td>suppression du HTML et des caractères de contrôle, décodage des entités, espaces uniformisés, <strong>masquage des e-mails et téléphones</strong></td>
+</tr>
+<tr>
+<td>Dates</td>
+<td>horodatage Unix, ISO 8601 → <code>AAAA-MM-JJ</code></td>
+</tr>
+<tr>
+<td>Contrat</td>
+<td>« Unbefristeter Arbeitsvertrag », « CDI », « Full-time permanent » → temps plein ; « CDD », « fixed term » → temporaire ; « Stage », « Alternance » détectés dans l'intitulé</td>
+</tr>
+<tr>
+<td>Expérience</td>
+<td>« Senior », « berufserfahren », « 5+ years of experience » → niveau normalisé</td>
+</tr>
+<tr>
+<td>Géographie</td>
+<td>« 75 - Paris 15e » → Paris, France ; « Berlin » → Allemagne ; détection du télétravail</td>
+</tr>
+<tr>
+<td>Salaire</td>
+<td>« $3.5k–$5k/month » → 3 500–5 000 USD mensuels → <strong>annualisé en euros</strong> ; valeurs aberrantes rejetées</td>
+</tr>
+<tr>
+<td>Compétences (NLP)</td>
+<td>taxonomie de ~110 technologies et ~35 compétences, en français, anglais et allemand</td>
+</tr>
+<tr>
+<td>Secteur</td>
+<td>12 familles de métiers ; secteur manquant prédit par le modèle de machine learning</td>
+</tr>
+</tbody>
+</table>
+<p>Les règles métier sont des <strong>fonctions Python pures</strong>, couvertes par 42 tests unitaires et indépendantes de Spark ; Spark apporte la parallélisation, le typage, les fonctions de fenêtrage, les agrégations SQL et l'écriture Parquet. Le même job s'exécute sur un cluster en changeant uniquement l'adresse du <em>master</em>.</p>
+<p>Plusieurs erreurs de normalisation ont été détectées en confrontant les règles aux données réelles puis corrigées et couvertes par des tests : le mot « Internet » reconnu comme un stage (<code>intern</code>), « unbefristet » (CDI en allemand) classé en contrat temporaire, ou « North America » associé aux États-Unis.</p>
+<h2 id="23-qualite-des-donnees">2.3 Qualité des données</h2>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Contrôles</th>
+<th>Traitement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Complétude</td>
+<td>titre, entreprise, URL (bloquants) ; description, localisation (avertissements)</td>
+<td>quarantaine / rapport</td>
+</tr>
+<tr>
+<td>Validité</td>
+<td>salaire min ≤ max, URL valide, date valide et non future</td>
+<td>quarantaine</td>
+</tr>
+<tr>
+<td>Unicité</td>
+<td><code>job_id</code> et clé de déduplication uniques après traitement</td>
+<td>contrôle global</td>
+</tr>
+<tr>
+<td>Fraîcheur</td>
+<td>publication de plus de 90 jours</td>
+<td>avertissement</td>
+</tr>
+<tr>
+<td>Cohérence</td>
+<td>pays déduit de la ville ≠ pays annoncé</td>
+<td>avertissement</td>
+</tr>
+</tbody>
+</table>
+<p>Les offres non conformes sont dirigées vers la zone <strong>quarantaine</strong>, sans bloquer le pipeline. Rapports des derniers lots :</p>
+<table>
+<thead>
+<tr>
+<th>Lot</th>
+<th>Offres brutes</th>
+<th>Valides</th>
+<th>Quarantaine</th>
+<th>Doublons supprimés</th>
+<th>Offres traitées</th>
+<th>Complétude moyenne</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>20261116T185238</td>
+<td>6 321</td>
+<td>6 321</td>
+<td>0</td>
+<td>72</td>
+<td>6 249</td>
+<td>59 %</td>
+</tr>
+<tr>
+<td>20261116T120000</td>
+<td>1 316</td>
+<td>1 316</td>
+<td>0</td>
+<td>21</td>
+<td>1 295</td>
+<td>80 %</td>
+</tr>
+<tr>
+<td>20261116T175546</td>
+<td>1 316</td>
+<td>1 316</td>
+<td>0</td>
+<td>21</td>
+<td>1 295</td>
+<td>80 %</td>
+</tr>
+<tr>
+<td>20261116T060000</td>
+<td>1 332</td>
+<td>1 332</td>
+<td>0</td>
+<td>63</td>
+<td>1 269</td>
+<td>80 %</td>
+</tr>
+</tbody>
+</table>
+<p>Le dernier lot, qui intègre pour la première fois Welcome to the Jungle, compte 5 000 avertissements « description absente » : c'est la conséquence attendue de la collecte par sitemap (sans accès aux fiches). Le taux de complétude global de l'entrepôt est le suivant :</p>
+<p><img alt="Complétude des attributs" src="img/completeness.png" /></p>
+<h2 id="24-deduplication">2.4 Déduplication</h2>
+<p>Une même offre pouvant apparaître sur plusieurs plateformes ou plusieurs fois dans une même source, la déduplication opère à trois niveaux :</p>
+<ol>
+<li><strong>dans la source</strong> : identifiant déjà vu pendant l'exécution ;</li>
+<li><strong>entre sources, dans un lot</strong> (Spark) : clé <code>SHA-1(entreprise | intitulé | ville)</code> après normalisation (casse, accents, ponctuation, mentions « (H/F) » / « (m/w/d) », formes juridiques « GmbH », « SAS »…) ; une fonction de fenêtrage conserve la version <strong>la plus complète</strong> puis la plus récente ;</li>
+<li><strong>entre lots</strong> (MongoDB) : <em>upsert</em> sur la clé, historisation par <code>first_seen_at</code> / <code>last_seen_at</code>.</li>
+</ol>
+<p>Sur le dernier lot, 72 doublons ont été éliminés pour 6 321 offres brutes.</p>
+<h2 id="25-indicateurs-et-premiers-resultats">2.5 Indicateurs et premiers résultats</h2>
+<p>Les KPIs sont calculés de deux façons complémentaires : par <strong>Spark SQL</strong> à chaque exécution (zone gold et exports Power BI) et par <strong>agrégations MongoDB</strong> à la demande (API, filtres interactifs).</p>
+<p><strong>Volume et géographie.</strong> L'entrepôt contient 6 297 offres de 1 226 entreprises dans 30 pays. La France domine (4 973 offres) du fait de l'intégration de Welcome to the Jungle, suivie de l'Allemagne (Arbeitnow). Paris concentre 778 offres. 8,4 % des offres mentionnent le télétravail.</p>
+<p><img alt="Offres par pays" src="img/countries.png" /></p>
+<p><img alt="Top villes" src="img/cities.png" /></p>
+<p><strong>Technologies et compétences.</strong> Les technologies les plus demandées sont : Python (229), OpenAI / LLM APIs (192), SQL (127), AWS (120), CI/CD (104), Salesforce (102), Java (100), Kubernetes (97). La forte présence des API de modèles de langage (OpenAI, LLM) illustre l'effet de l'IA générative sur les offres techniques. Côté compétences comportementales, la communication, le travail en équipe et l'adaptabilité dominent ; l'anglais reste la langue la plus exigée.</p>
+<p><img alt="Technologies les plus demandées" src="img/top_tech.png" /></p>
+<p><img alt="Compétences comportementales" src="img/soft_skills.png" /></p>
+<p><strong>Contrats, secteurs et salaires.</strong> Les types de contrat explicitement identifiables se répartissent ainsi (les offres « non renseignées » sont celles dont le contrat n'apparaît ni dans l'intitulé ni dans les métadonnées) :</p>
+<p><img alt="Types de contrat" src="img/contracts.png" /></p>
+<p><img alt="Secteurs" src="img/industries.png" /></p>
+<p>Seules 249 offres (4,0 %) publient un salaire exploitable – risque identifié dès le livrable 1. Sur cet échantillon, majoritairement composé d'offres internationales en télétravail, le salaire annuel moyen atteint 126 481 € ; il progresse nettement avec le niveau d'expérience :</p>
+<p><img alt="Salaire moyen par niveau" src="img/salary_exp.png" /></p>
+<p><img alt="Salaire moyen par technologie" src="img/salary_tech.png" /></p>
+<blockquote>
+<p>Ces chiffres décrivent l'échantillon collecté et non l'ensemble du marché : les sources internationales en télétravail (Jobicy, Remotive) sont celles qui publient le plus de salaires, souvent en dollars américains.</p>
+</blockquote>
+<h1 id="chapitre-3-visualiser-restituer-la-donnee">Chapitre 3 – Visualiser : restituer la donnée</h1>
+<h2 id="31-application-web-react">3.1 Application web React</h2>
+<p>L'application, développée en <strong>React 18</strong> (Vite, React Router, Recharts) et servie par <strong>nginx</strong>, reprend la maquette du livrable 1. Elle s'appuie exclusivement sur l'API FastAPI.</p>
+<table>
+<thead>
+<tr>
+<th>Page</th>
+<th>Contenu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connexion</td>
+<td>authentification, inscription, politique de mot de passe</td>
+</tr>
+<tr>
+<td>Tableau de bord</td>
+<td>cartes KPI, évolution des offres (jour / semaine / mois), répartition par secteur, top technologies, offres par pays, dernières offres</td>
+</tr>
+<tr>
+<td>Offres d'emploi</td>
+<td>recherche plein texte, 8 filtres, tri, pagination, fiche détaillée avec <strong>lien vers l'offre originale</strong> et mention de la source</td>
+</tr>
+<tr>
+<td>Analyses</td>
+<td>contrats, expérience, villes, sources, salaires</td>
+</tr>
+<tr>
+<td>Compétences</td>
+<td>technologies (top 25, par catégorie), compétences techniques, comportementales et linguistiques, tendances</td>
+</tr>
+<tr>
+<td>IA &amp; matching</td>
+<td>matching CV, recherche sémantique, estimation de salaire, classification, métriques des modèles</td>
+</tr>
+<tr>
+<td>Pipeline &amp; qualité</td>
+<td>exécutions, rapports qualité, complétude, utilisateurs et journal d'audit (administrateurs)</td>
+</tr>
+</tbody>
+</table>
+<p>Un filtre global (pays, période) s'applique à toutes les pages. Les choix de visualisation suivent des règles simples : une couleur unique pour une série unique, une palette catégorielle d'ordre fixe et une légende pour les séries multiples, regroupement en « Autres » au-delà de sept catégories, info-bulles sur tous les graphiques, aucun double axe, thème sombre automatique.</p>
+<blockquote>
+<p><em>[Captures d'écran à insérer : tableau de bord, liste des offres avec fiche détaillée, page Compétences, page IA (matching CV), page Pipeline &amp; qualité.]</em></p>
+</blockquote>
+<h2 id="32-api-fastapi">3.2 API FastAPI</h2>
+<p>L'API expose une trentaine de routes documentées automatiquement (OpenAPI / Swagger) : authentification, offres, indicateurs (<code>/analytics/overview</code>, <code>/timeline</code>, <code>/top-technologies</code>, <code>/breakdown/{dimension}</code>, <code>/salaries</code>…), intelligence artificielle et administration. Tous les endpoints analytiques acceptent les mêmes filtres que la liste des offres. La vue d'ensemble calcule huit indicateurs en une seule requête MongoDB (<code>$facet</code>).</p>
+<h2 id="33-reporting-power-bi">3.3 Reporting Power BI</h2>
+<p>Pour les analystes, la tâche <code>spark_analytics_kpis</code> exporte à chaque exécution un <strong>modèle en étoile</strong> au format CSV : une table de faits <code>fact_jobs</code>, deux tables de liaison (offre ↔ technologie, offre ↔ compétence), deux dimensions et une dizaine d'agrégats déjà calculés. Le rapport Power BI comporte une table calendrier, des mesures DAX (nombre d'offres, salaire médian, part de télétravail, évolution sur 30 jours…) et trois pages : vue d'ensemble, compétences et technologies, salaires et contrats.</p>
+<pre><code>Nb offres = DISTINCTCOUNT ( fact_jobs[dedup_key] )
+Salaire médian (€) = MEDIANX ( FILTER ( fact_jobs, NOT ISBLANK ( fact_jobs[salary_mid_eur] ) ),
+                               fact_jobs[salary_mid_eur] )
+</code></pre>
+<blockquote>
+<p><em>[Captures à insérer : vue Modèle de Power BI et pages du rapport.]</em></p>
+</blockquote>
+<h1 id="chapitre-4-securite">Chapitre 4 – Sécurité</h1>
+<p>La sécurité a été traitée selon une logique de <strong>défense en profondeur</strong> : chaque couche est protégée indépendamment.</p>
+<h2 id="41-authentification-et-autorisation">4.1 Authentification et autorisation</h2>
+<table>
+<thead>
+<tr>
+<th>Menace</th>
+<th>Mesure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vol de base de données</td>
+<td>mots de passe hachés avec <strong>bcrypt</strong> (sel aléatoire, coût 12)</td>
+</tr>
+<tr>
+<td>Mots de passe faibles</td>
+<td>au moins 8 caractères, une lettre et un chiffre</td>
+</tr>
+<tr>
+<td>Usurpation de session</td>
+<td>jetons <strong>JWT</strong> signés (HS256), expiration à 2 h, émetteur vérifié ; jeton falsifié rejeté</td>
+</tr>
+<tr>
+<td>Élévation de privilèges</td>
+<td>contrôle d'accès par rôle (<em>viewer</em>, <em>analyst</em>, <em>admin</em>)</td>
+</tr>
+<tr>
+<td>Énumération de comptes</td>
+<td>message d'erreur identique pour un e-mail inconnu et un mauvais mot de passe</td>
+</tr>
+<tr>
+<td>Force brute / abus</td>
+<td>limitation de débit : 10 connexions / min, 5 inscriptions / min, 15 à 30 appels IA / min</td>
+</tr>
+<tr>
+<td>Appels inter-services</td>
+<td>jeton de service comparé en temps constant (Airflow → API)</td>
+</tr>
+<tr>
+<td>Non-traçabilité</td>
+<td><strong>journal d'audit</strong> : connexions réussies et échouées, changements de rôle, usage du matching CV</td>
+</tr>
+</tbody>
+</table>
+<h2 id="42-protection-des-echanges">4.2 Protection des échanges</h2>
+<p>Tous les paramètres sont validés (types, longueurs, bornes, expressions régulières). Aucun objet fourni par l'utilisateur n'est transmis tel quel à MongoDB et le texte libre est échappé : une tentative d'<strong>injection NoSQL</strong> (<code>{"$ne": null}</code>) est traitée comme une simple chaîne – cas couvert par un test automatisé. Les erreurs internes renvoient un message générique, sans trace d'exécution. L'API et nginx ajoutent les en-têtes de sécurité (<code>Content-Security-Policy</code>, <code>X-Frame-Options: DENY</code>, <code>X-Content-Type-Options</code>, <code>Referrer-Policy</code>, <code>Permissions-Policy</code>) ; le CORS est limité aux origines du front et l'API est servie sous le même domaine. Les descriptions d'offres sont affichées comme du texte brut, ce qui écarte les injections de script.</p>
+<h2 id="43-infrastructure">4.3 Infrastructure</h2>
+<ul>
+<li><strong>Secrets</strong> hors du code, dans un fichier <code>.env</code> généré aléatoirement et exclu de Git ; chaque conteneur ne reçoit que ses propres variables.</li>
+<li><strong>Réseaux Docker séparés</strong> (données / front) et ports publiés uniquement sur l'interface locale.</li>
+<li><strong>Moindre privilège</strong> sur MongoDB : authentification obligatoire, un compte par usage (pipeline, API, BI en lecture seule) ; le compte administrateur n'est utilisé par aucun service.</li>
+<li>API exécutée par un utilisateur <strong>non-root</strong> ; version de nginx masquée ; clé Fernet chiffrant les connexions Airflow ; bucket MinIO versionné.</li>
+</ul>
+<h2 id="44-donnees-personnelles-et-conformite">4.4 Données personnelles et conformité</h2>
+<table>
+<thead>
+<tr>
+<th>Principe (RGPD)</th>
+<th>Mise en œuvre</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Minimisation</td>
+<td>seules des offres publiques sont collectées ; section « Contact » retirée au scraping ; e-mails et téléphones masqués</td>
+</tr>
+<tr>
+<td>Limitation de la conservation</td>
+<td>rétention Kafka de 7 jours ; CV du matching traité en mémoire, <strong>jamais stocké</strong></td>
+</tr>
+<tr>
+<td>Sécurité des comptes</td>
+<td>bcrypt, JWT, journal d'audit</td>
+</tr>
+</tbody>
+</table>
+<p>Le respect des <strong>conditions d'utilisation des sources</strong> relève du même souci : vérification de <code>robots.txt</code>, débit limité, User-Agent identifié, attribution et lien vers l'offre originale (exigés par Remotive et Jobicy), refus de contourner les protections de LinkedIn, d'Indeed et des fiches Welcome to the Jungle.</p>
+<h2 id="45-verification">4.5 Vérification</h2>
+<p>Huit tests automatisés de l'API couvrent ces mesures (route protégée → 401, rôle insuffisant → 403, jeton modifié, mot de passe faible, hachage, injection NoSQL, en-têtes, jeton de service), complétés par un test de bout en bout sur la plateforme déployée (14 contrôles, tous valides).</p>
+<p>Pour une mise en production : HTTPS et HSTS (déjà préparés dans la configuration nginx), gestionnaire de secrets, rotation des clés, authentification multi-facteurs pour les administrateurs, chiffrement de Kafka (SASL/TLS) et sauvegardes chiffrées.</p>
+<h1 id="chapitre-5-intelligence-artificielle-appliquee-a-lanalyse-des-donnees">Chapitre 5 – Intelligence artificielle appliquée à l'analyse des données</h1>
+<p>L'IA intervient à deux niveaux : <strong>enrichir</strong> les données (secteur manquant, familles de métiers) et <strong>offrir de nouveaux usages</strong> (recherche par le sens, matching CV, estimation de salaire).</p>
+<table>
+<thead>
+<tr>
+<th>Tâche</th>
+<th>Type</th>
+<th>Modèle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Secteur d'une offre</td>
+<td>classification supervisée (NLP)</td>
+<td>TF-IDF + 3 algorithmes comparés</td>
+</tr>
+<tr>
+<td>Salaire annuel</td>
+<td>régression</td>
+<td>baseline, Ridge, Random Forest</td>
+</tr>
+<tr>
+<td>Familles de métiers</td>
+<td>clustering non supervisé</td>
+<td>TF-IDF → SVD → K-Means</td>
+</tr>
+<tr>
+<td>Recherche sémantique</td>
+<td>deep learning</td>
+<td>Transformer multilingue</td>
+</tr>
+<tr>
+<td>Matching CV ↔ offres</td>
+<td>deep learning + règles</td>
+<td>embeddings + recouvrement des technologies</td>
+</tr>
+<tr>
+<td>Secteur (variante)</td>
+<td>deep learning</td>
+<td>réseau de neurones PyTorch sur embeddings</td>
+</tr>
+</tbody>
+</table>
+<p>Les modèles classiques sont entraînés par Airflow chaque semaine ; les modèles profonds sont servis par l'API. Chaque entraînement est historisé (<code>ml_runs</code>) et affiché dans l'application.</p>
+<h2 id="51-classification-du-secteur">5.1 Classification du secteur</h2>
+<p>Certaines sources (Arbeitnow, Welcome to the Jungle) ne fournissent pas de secteur. Le modèle apprend sur les offres dont le secteur est connu (Jobicy, Remotive, python.org), puis prédit celui des autres. Le texte (intitulé pondéré, tags, technologies, début de description) est vectorisé par <strong>TF-IDF</strong> (unigrammes et bigrammes) ; trois classifieurs sont comparés sur un jeu de test stratifié de 20 %, avec la <strong>macro-F1</strong> comme métrique principale car les classes sont déséquilibrées.</p>
+<table>
+<thead>
+<tr>
+<th>Modèle</th>
+<th>Accuracy</th>
+<th>Macro-F1</th>
+<th>F1 pondéré</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Régression logistique <strong>(retenu)</strong></td>
+<td>0.52</td>
+<td>0.35</td>
+<td>0.50</td>
+</tr>
+<tr>
+<td>SVM linéaire (calibré)</td>
+<td>0.52</td>
+<td>0.31</td>
+<td>0.47</td>
+</tr>
+<tr>
+<td>Complement Naive Bayes</td>
+<td>0.45</td>
+<td>0.25</td>
+<td>0.41</td>
+</tr>
+</tbody>
+</table>
+<p><em>352 offres d'apprentissage, 88 de test, 11 classes.</em></p>
+<p>Le meilleur modèle a attribué un secteur à 1 342 offres. Il n'en classe pas davantage par choix : sous un seuil de confiance de 0,35, l'offre reste « non classée ». Ce comportement est volontaire : les secteurs d'apprentissage proviennent de plateformes orientées technologie, alors que Welcome to the Jungle couvre tous les métiers (commerce, industrie, santé) ; forcer une prédiction produirait des erreurs. Enrichir le référentiel de secteurs constitue une perspective naturelle.</p>
+<h2 id="52-estimation-du-salaire">5.2 Estimation du salaire</h2>
+<p>La cible est le logarithme du salaire annuel médian (en euros) ; les variables sont l'intitulé (TF-IDF), les technologies, le niveau d'expérience, le pays, le contrat, le télétravail et le secteur.</p>
+<table>
+<thead>
+<tr>
+<th>Modèle</th>
+<th>Erreur absolue moyenne</th>
+<th>R²</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Référence (médiane)</td>
+<td>57 100 €</td>
+<td>0.00</td>
+</tr>
+<tr>
+<td>Régression Ridge</td>
+<td>51 516 €</td>
+<td>0.23</td>
+</tr>
+<tr>
+<td>Random Forest <strong>(retenu)</strong></td>
+<td>48 285 €</td>
+<td>0.29</td>
+</tr>
+</tbody>
+</table>
+<p><em>199 offres d'apprentissage, 50 de test.</em></p>
+<p>Le modèle retenu réduit l'erreur par rapport à la référence naïve, mais reste <strong>indicatif</strong> : peu d'offres publient un salaire. L'application présente donc toujours l'estimation avec un intervalle égal à l'erreur moyenne.</p>
+<h2 id="53-familles-de-metiers-clustering">5.3 Familles de métiers (clustering)</h2>
+<p>Les intitulés et technologies sont vectorisés (TF-IDF), réduits à 100 dimensions par <strong>analyse sémantique latente</strong> (SVD tronquée) puis regroupés par <strong>K-Means</strong> ; le nombre de groupes est choisi par le score de silhouette (14 groupes, silhouette 0,14). Principales familles identifiées :</p>
+<ul>
+<li><strong>Directeur / Specialist / Conducteur</strong> (2 237 offres) – Excel, OpenAI / LLM APIs, Java, Salesforce</li>
+<li><strong>Manager / Product / Account</strong> (535 offres) – OpenAI / LLM APIs, Salesforce, Excel, HubSpot</li>
+<li><strong>Ingenieur / Stage / Developpement</strong> (471 offres) – GCP, Kubernetes, C#, C++</li>
+<li><strong>Technicien / Charge / Maintenance</strong> (437 offres) – Linux, Vue.js</li>
+<li><strong>Stage / Assistant / Charge</strong> (402 offres) – Power BI, Salesforce, Azure, Excel</li>
+<li><strong>Responsable / Secteur / Cdi</strong> (334 offres) – technologies peu citées</li>
+<li><strong>Python / Engineer / Aws</strong> (320 offres) – Python, AWS, CI/CD, SQL</li>
+<li><strong>Conseiller / Vente / Ere</strong> (296 offres) – technologies peu citées</li>
+<li><strong>Consultant / Polyvalent / Equipier</strong> (278 offres) – SAP, Java, OpenAI / LLM APIs, SQL</li>
+<li><strong>Commercial / Agent / Immobilier</strong> (268 offres) – technologies peu citées</li>
+</ul>
+<p>La silhouette modérée reflète la nature continue du marché (les métiers se recouvrent) ; les groupes restent toutefois interprétables et distinguent nettement les profils techniques, commerciaux, industriels et de stage.</p>
+<h2 id="54-recherche-semantique-deep-learning">5.4 Recherche sémantique (deep learning)</h2>
+<p>Chaque offre est représentée par un vecteur de 384 dimensions calculé par le modèle <strong>paraphrase-multilingual-MiniLM-L12-v2</strong>, un Transformer de type BERT distillé (12 couches) entraîné sur plus de 50 langues. Une requête est encodée de la même façon et comparée aux offres par similarité cosinus. La recherche porte ainsi sur le <strong>sens</strong> et non sur les mots : la requête « ingénieur données cloud » renvoie :</p>
+<table>
+<thead>
+<tr>
+<th>Rang</th>
+<th>Offre</th>
+<th>Entreprise</th>
+<th>Similarité</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Ingenieur Cloud Ops</td>
+<td>Thales</td>
+<td>0.84</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Architecte Data Cloud</td>
+<td>Thales</td>
+<td>0.82</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Cloud Engineer AWS</td>
+<td>Capgemini</td>
+<td>0.82</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Ingenieur Cloudops</td>
+<td>Thales</td>
+<td>0.79</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Ingenieur Systeme Automatisation Cloud Gennevilliers</td>
+<td>Up Coop</td>
+<td>0.78</td>
+</tr>
+</tbody>
+</table>
+<p>Les 6 297 offres sont indexées de façon incrémentale après chaque exécution du pipeline.</p>
+<h2 id="55-matching-cv-offres">5.5 Matching CV ↔ offres</h2>
+<p>Le score combine similarité sémantique (70 %) et part des technologies de l'offre présentes dans le CV (30 %). L'application indique pour chaque offre les technologies maîtrisées et manquantes, puis recommande les compétences à acquérir en priorité. Exemple avec le profil « Master 2 Data Engineering : Python, SQL, Spark, Kafka, Airflow, Docker, MongoDB, Power BI » :</p>
+<table>
+<thead>
+<tr>
+<th>Offre</th>
+<th>Score</th>
+<th>Technologies en commun</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Data/ML Engineer (Python)</td>
+<td>0.76</td>
+<td>Python</td>
+</tr>
+<tr>
+<td>Data Engineer Pyspark Data Factory Services Financiers Ile De France</td>
+<td>0.72</td>
+<td>Apache Spark</td>
+</tr>
+<tr>
+<td>Junior Data Scientist - Casablanca</td>
+<td>0.69</td>
+<td>Python, SQL</td>
+</tr>
+<tr>
+<td>Data Scientist Fund Data &amp; Offers</td>
+<td>0.68</td>
+<td>Python, SQL</td>
+</tr>
+<tr>
+<td>Senior Data Engineer (m/w/d)</td>
+<td>0.66</td>
+<td>Apache Spark, Python, SQL</td>
+</tr>
+</tbody>
+</table>
+<p>Compétences recommandées : <strong>Databricks, ETL</strong>.</p>
+<h2 id="56-reseau-de-neurones-comparaison-ml-dl">5.6 Réseau de neurones : comparaison ML / DL</h2>
+<p>Un perceptron multicouche (PyTorch) est entraîné sur les embeddings du Transformer (<em>transfer learning</em>) : couches de 256 et 128 neurones, ReLU, <em>dropout</em> de 0,3, optimiseur Adam, entropie croisée pondérée et arrêt anticipé sur la macro-F1 de validation.</p>
+<table>
+<thead>
+<tr>
+<th>Approche</th>
+<th>Accuracy</th>
+<th>Macro-F1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TF-IDF + Régression logistique (ML)</td>
+<td>0.52</td>
+<td>0.35</td>
+</tr>
+<tr>
+<td>Embeddings Transformer + MLP PyTorch (DL)</td>
+<td>0.43</td>
+<td>0.35</td>
+</tr>
+</tbody>
+</table>
+<p><em>Arrêt anticipé après 31 époques ; 88 offres de test.</em></p>
+<p>Sur ce volume d'apprentissage réduit, le réseau de neurones <strong>n'apporte pas de gain</strong> par rapport à la régression logistique sur TF-IDF : les deux approches obtiennent une macro-F1 proche, et l'écart dépend du découpage d'un jeu de test de moins de 100 offres. L'intérêt du deep learning se situe ailleurs : représentation <strong>multilingue et sémantique</strong>, réutilisée pour la recherche et le matching. Le modèle TF-IDF reste plus rapide, plus léger et plus explicable pour la classification.</p>
+<h2 id="57-limites">5.7 Limites</h2>
+<ul>
+<li>étiquettes « faibles » (secteur déclaré par la source, parfois très large) et classes déséquilibrées ;</li>
+<li>faible proportion d'offres avec salaire ;</li>
+<li>offres Welcome to the Jungle limitées à l'intitulé (pas de description) ;</li>
+<li>historique encore court pour une prédiction de tendances.</li>
+</ul>
+<h1 id="conclusion">Conclusion</h1>
+<h2 id="bilan">Bilan</h2>
+<p>Le projet répond à la problématique posée : JobInsight collecte automatiquement des offres d'emploi issues de cinq sources actives (et deux sources supplémentaires activables), les ingère via Kafka, les conserve dans un Data Lake organisé en zones, les nettoie, les enrichit, contrôle leur qualité et les déduplique avec Spark, les historise dans MongoDB puis les restitue dans une application web sécurisée, dans Power BI et à travers des fonctionnalités d'intelligence artificielle. L'ensemble est orchestré par Airflow et déployable en une commande grâce à Docker. Au 16/11/2026, l'entrepôt compte 6 297 offres de 1 226 entreprises.</p>
+<p>Tous les critères de réussite du MVP définis dans le livrable 1 sont atteints : pipeline fonctionnel de la collecte au tableau de bord, données brutes conservées et historisées, doublons détectés, contrôles de qualité automatiques, KPIs disponibles, pipeline rejouable, projet documenté et reproductible.</p>
+<h2 id="competences-de-data-engineering-mobilisees">Compétences de data engineering mobilisées</h2>
+<ul>
+<li>conception d'une architecture de données de bout en bout (lac, entrepôt, zones bronze / silver / gold) ;</li>
+<li>ingestion fiable et découplée (Kafka, garanties de livraison, idempotence) ;</li>
+<li>traitement distribué (Spark : RDD, DataFrames, fonctions de fenêtrage, Spark SQL, Parquet) ;</li>
+<li>qualité des données (règles par dimension, quarantaine, rapports) et déduplication multi-niveaux ;</li>
+<li>modélisation (document MongoDB, modèle en étoile pour la BI) ;</li>
+<li>orchestration et supervision (Airflow, retries, idempotence, monitoring) ;</li>
+<li>API et visualisation (FastAPI, React, Power BI) ;</li>
+<li>sécurité et conformité (authentification, autorisation, moindre privilège, RGPD, respect des sources) ;</li>
+<li>conteneurisation et tests automatisés (Docker Compose, 50 tests unitaires et d'API, test de bout en bout).</li>
+</ul>
+<h2 id="difficultes-rencontrees">Difficultés rencontrées</h2>
+<ul>
+<li><strong>Accès aux grandes plateformes</strong> : LinkedIn et Indeed interdisent la collecte automatisée ; Welcome to the Jungle protège ses fiches. Nous avons choisi de respecter ces règles et d'exploiter les canaux autorisés (sitemap, API).</li>
+<li><strong>Hétérogénéité des sources</strong> : formats, langues (français, anglais, allemand), devises et périodicités des salaires variés, imposant des règles de normalisation testées sur données réelles.</li>
+<li><strong>Infrastructure</strong> : saturation du disque du poste de développement, ayant corrompu des images Docker ; disparition de l'image officielle MinIO du registre public, remplacée par une distribution équivalente ; conflit de port avec une instance MongoDB locale.</li>
+<li><strong>Données d'apprentissage limitées</strong> pour l'IA (salaires rares, secteurs déclarés hétérogènes).</li>
+</ul>
+<h2 id="perspectives">Perspectives</h2>
+<ul>
+<li>activer les API Adzuna et France Travail pour élargir la couverture française ;</li>
+<li>passer au <strong>streaming</strong> (consommateur Kafka continu, Spark Structured Streaming) ;</li>
+<li>déployer Spark sur un cluster et adopter un format de table transactionnel (Delta Lake, Iceberg) ;</li>
+<li>géocodage des petites villes, détection de la langue, enrichissement du référentiel de secteurs ;</li>
+<li>prédiction des tendances de compétences par séries temporelles une fois plusieurs mois d'historique accumulés ;</li>
+<li>intégration et déploiement continus (GitLab CI), supervision Prometheus / Grafana, déploiement cloud sécurisé (HTTPS).</li>
+</ul>
+<h1 id="annexes">Annexes</h1>
+<h2 id="a-lancer-la-plateforme">A. Lancer la plateforme</h2>
+<pre><code>docker compose up -d --build
+Application : http://localhost:3000     API : http://localhost:8000/docs
+Airflow     : http://localhost:8080     MinIO : http://localhost:9001
+python scripts/smoke_test.py --ai       (test de bout en bout)
+</code></pre>
+<h2 id="b-organisation-du-code">B. Organisation du code</h2>
+<pre><code>pipeline/jobinsight/   collecte, ingestion, Data Lake, traitement Spark, qualité, MongoDB, KPIs, ML
+airflow/dags/          DAGs jobinsight_pipeline et jobinsight_ml
+backend/app/           API FastAPI, sécurité, analytique, deep learning
+frontend/src/          application React
+powerbi/               guide Power BI (modèle, DAX, pages)
+docs/                  documentation technique (14 fiches)
+</code></pre>
+<h2 id="c-tests">C. Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Suite</th>
+<th>Contenu</th>
+<th>Résultat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pipeline (42 tests)</td>
+<td>nettoyage, dates, contrats, expérience, salaires, NLP, géographie, qualité, déduplication, parsers</td>
+<td>valide</td>
+</tr>
+<tr>
+<td>API (8 tests)</td>
+<td>authentification, autorisation, injection, en-têtes</td>
+<td>valide</td>
+</tr>
+<tr>
+<td>Bout en bout (14 contrôles)</td>
+<td>plateforme déployée : sécurité, données, KPIs, IA</td>
+<td>valide</td>
+</tr>
+</tbody>
+</table></body></html>

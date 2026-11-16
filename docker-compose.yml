@@ -1,0 +1,209 @@
+# JobInsight – plateforme Big Data de collecte et d'analyse des offres d'emploi
+# Démarrage : cp .env.example .env  (puis générer les secrets)  &&  docker compose up -d --build
+#
+# Sécurité : chaque service ne reçoit QUE les variables dont il a besoin (pas d'env_file global),
+# les bases ne sont joignables que sur le réseau interne "backend-net" ; seuls le front, l'API et
+# les consoles d'admin (dev) sont publiés sur 127.0.0.1 (pas exposés sur le réseau local).
+
+x-pipeline-env: &pipeline-env
+  INGESTION_MODE: kafka
+  KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+  KAFKA_TOPIC_RAW: jobs.raw
+  MINIO_ENDPOINT: http://minio:9000
+  MINIO_ROOT_USER: ${MINIO_PIPELINE_USER:-${MINIO_ROOT_USER}}
+  MINIO_ROOT_PASSWORD: ${MINIO_PIPELINE_PASSWORD:-${MINIO_ROOT_PASSWORD}}
+  LAKE_BUCKET: datalake
+  MONGO_URI: mongodb://${MONGO_PIPELINE_USER}:${MONGO_PIPELINE_PASSWORD}@mongo:27017/jobinsight?authSource=jobinsight
+  MONGO_DB: jobinsight
+  EXPORTS_DIR: /opt/jobinsight/exports
+  MODELS_DIR: /opt/jobinsight/models
+  LOCAL_DATA_DIR: /opt/jobinsight/data
+  ARBEITNOW_MAX_PAGES: ${ARBEITNOW_MAX_PAGES:-3}
+  PYTHONORG_MAX_PAGES: ${PYTHONORG_MAX_PAGES:-3}
+  ADZUNA_APP_ID: ${ADZUNA_APP_ID:-}
+  ADZUNA_APP_KEY: ${ADZUNA_APP_KEY:-}
+  FRANCE_TRAVAIL_CLIENT_ID: ${FRANCE_TRAVAIL_CLIENT_ID:-}
+  FRANCE_TRAVAIL_CLIENT_SECRET: ${FRANCE_TRAVAIL_CLIENT_SECRET:-}
+  PIPELINE_SERVICE_TOKEN: ${PIPELINE_SERVICE_TOKEN}
+  BACKEND_INTERNAL_URL: http://backend:8000
+
+services:
+  # ------------------------------------------------------------------ Orchestration
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: ${AIRFLOW_DB_PASSWORD}
+      POSTGRES_DB: airflow
+    volumes: [postgres_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 10s
+      retries: 10
+    networks: [backend-net]
+    restart: unless-stopped
+
+  airflow:
+    build: { context: ., dockerfile: airflow/Dockerfile }
+    image: jobinsight/airflow:1.0
+    depends_on:
+      postgres: { condition: service_healthy }
+      kafka: { condition: service_healthy }
+      mongo: { condition: service_healthy }
+      minio: { condition: service_healthy }
+    environment:
+      <<: *pipeline-env
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:${AIRFLOW_DB_PASSWORD}@postgres/airflow
+      AIRFLOW__CORE__FERNET_KEY: ${AIRFLOW_FERNET_KEY}
+      AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW_SECRET_KEY}
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "false"
+      AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "false"
+      AIRFLOW__WEBSERVER__WORKERS: "2"
+      AIRFLOW__CORE__PARALLELISM: "6"
+      AIRFLOW_ADMIN_USER: ${AIRFLOW_ADMIN_USER:-admin}
+      AIRFLOW_ADMIN_PASSWORD: ${AIRFLOW_ADMIN_PASSWORD}
+      SPARK_DRIVER_MEMORY: 1g
+    command: >
+      bash -c "airflow db migrate &&
+      (airflow users create --username $${AIRFLOW_ADMIN_USER} --password $${AIRFLOW_ADMIN_PASSWORD}
+      --firstname Admin --lastname JobInsight --role Admin --email admin@jobinsight.local || true) &&
+      (airflow scheduler &) && exec airflow webserver"
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./pipeline:/opt/jobinsight/pipeline
+      - ./exports:/opt/jobinsight/exports
+      - ./models:/opt/jobinsight/models
+      - airflow_logs:/opt/airflow/logs
+    ports: ["127.0.0.1:8080:8080"]
+    networks: [backend-net]
+    restart: unless-stopped
+
+  # ------------------------------------------------------------------ Ingestion
+  kafka:
+    image: apache/kafka:3.9.0
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,EXTERNAL://localhost:29092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_NUM_PARTITIONS: 3
+      KAFKA_LOG_RETENTION_HOURS: 168        # 7 jours de rétention => rejeu possible
+      KAFKA_MESSAGE_MAX_BYTES: 5000000
+      KAFKA_HEAP_OPTS: -Xmx512m -Xms256m
+    volumes: [kafka_data:/var/lib/kafka/data]
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server localhost:9092 > /dev/null 2>&1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+    ports: ["127.0.0.1:29092:29092"]
+    networks: [backend-net]
+    restart: unless-stopped
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:v0.7.2
+    depends_on: [kafka]
+    environment:
+      KAFKA_CLUSTERS_0_NAME: jobinsight
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    ports: ["127.0.0.1:8081:8080"]
+    networks: [backend-net]
+    profiles: [admin]
+
+  # ------------------------------------------------------------------ Data Lake
+  minio:
+    # l'image officielle minio/minio n'est plus publiée sur Docker Hub (2025) :
+    # même serveur MinIO (release 2025-04-22) empaqueté par Bitnami
+    image: bitnamilegacy/minio:2025.4.22
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_CONSOLE_PORT_NUMBER: "9001"
+    volumes: [minio_data:/bitnami/minio/data]
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      retries: 10
+    ports: ["127.0.0.1:9000:9000", "127.0.0.1:9001:9001"]
+    networks: [backend-net]
+    restart: unless-stopped
+
+  # ------------------------------------------------------------------ Warehouse / serving
+  mongo:
+    image: mongo:7.0
+    command: ["mongod", "--wiredTigerCacheSizeGB", "0.5", "--auth"]
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: jobinsight
+      MONGO_PIPELINE_USER: ${MONGO_PIPELINE_USER}
+      MONGO_PIPELINE_PASSWORD: ${MONGO_PIPELINE_PASSWORD}
+      MONGO_API_USER: ${MONGO_API_USER}
+      MONGO_API_PASSWORD: ${MONGO_API_PASSWORD}
+      MONGO_BI_USER: ${MONGO_BI_USER}
+      MONGO_BI_PASSWORD: ${MONGO_BI_PASSWORD}
+    volumes:
+      - mongo_data:/data/db
+      - ./docker/mongo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      retries: 10
+    ports: ["127.0.0.1:27018:27017"]
+    networks: [backend-net]
+    restart: unless-stopped
+
+  # ------------------------------------------------------------------ Application web
+  backend:
+    build: { context: ., dockerfile: backend/Dockerfile }
+    image: jobinsight/backend:1.0
+    depends_on:
+      mongo: { condition: service_healthy }
+    environment:
+      MONGO_URI: mongodb://${MONGO_API_USER}:${MONGO_API_PASSWORD}@mongo:27017/jobinsight?authSource=jobinsight
+      MONGO_DB: jobinsight
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRE_MINUTES: ${JWT_EXPIRE_MINUTES:-120}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      PIPELINE_SERVICE_TOKEN: ${PIPELINE_SERVICE_TOKEN}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://localhost:5173}
+      MODELS_DIR: /opt/models
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2}
+      HF_HOME: /opt/hf_cache
+    volumes:
+      - ./models:/opt/models
+      - hf_cache:/opt/hf_cache
+    ports: ["127.0.0.1:8000:8000"]
+    networks: [backend-net, frontend-net]
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    image: jobinsight/frontend:1.0
+    depends_on: [backend]
+    ports: ["127.0.0.1:3000:80"]
+    networks: [frontend-net]
+    restart: unless-stopped
+
+networks:
+  backend-net:
+  frontend-net:
+
+volumes:
+  postgres_data:
+  airflow_logs:
+  kafka_data:
+  minio_data:
+  mongo_data:
+  hf_cache:
