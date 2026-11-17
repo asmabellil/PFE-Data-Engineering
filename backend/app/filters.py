@@ -25,10 +25,13 @@ class JobFilters:
         remote: bool | None = Query(None),
         days: int | None = Query(None, ge=1, le=3650, description="Offres publiées sur les N derniers jours"),
         with_salary: bool | None = Query(None),
+        scope: str | None = Query(None, pattern="^(tech|all)$",
+                                  description="tech = métiers Tech/Data seulement (étiquette tech_scope)"),
     ):
         self.q, self.country, self.contract_type = q, country, contract_type
         self.experience_level, self.industry, self.technology = experience_level, industry, technology
         self.source, self.remote, self.days, self.with_salary = source, remote, days, with_salary
+        self.scope = scope
 
     def to_mongo(self, use_text_index: bool = True) -> dict:
         m: dict = {}
@@ -53,4 +56,6 @@ class JobFilters:
             m["publication_date"] = {"$gte": since}
         if self.with_salary:
             m["salary_annual_min_eur"] = {"$ne": None}
+        if self.scope == "tech":
+            m["tech_scope"] = True
         return m

@@ -9,6 +9,7 @@ from fastapi import APIRouter, Depends, Query
 
 from app.db import get_db
 from app.filters import JobFilters
+from app.salary_stats import MIN_SAMPLE, SALARY_FIELDS, salary_medians
 from app.security import get_current_user
 
 router = APIRouter(prefix="/api/analytics", tags=["analytics"], dependencies=[Depends(get_current_user)])
@@ -71,15 +72,32 @@ def overview(f: JobFilters = Depends()):
 
 
 @router.get("/timeline")
-def timeline(f: JobFilters = Depends(), granularity: str = Query("day", pattern="^(day|week|month)$")):
+def timeline(f: JobFilters = Depends(), granularity: str = Query("day", pattern="^(day|week|month)$"),
+             by: str | None = Query(None, pattern="^source$", description="Détail par source (aires empilées)")):
     size = {"day": 10, "month": 7}.get(granularity, 10)
     match = {**_match(f), "publication_date": {**(_match(f).get("publication_date") or {}), "$ne": None}}
     if granularity == "week":
         key = {"$dateToString": {"format": "%G-S%V", "date": {"$dateFromString": {"dateString": "$publication_date"}}}}
     else:
         key = {"$substrBytes": ["$publication_date", 0, size]}
-    rows = _agg([{"$match": match}, {"$group": {"_id": key, "jobs": {"$sum": 1}}}, {"$sort": {"_id": 1}}])
-    return [{"period": r["_id"], "jobs": r["jobs"]} for r in rows]
+    if by != "source":
+        rows = _agg([{"$match": match}, {"$group": {"_id": key, "jobs": {"$sum": 1}}}, {"$sort": {"_id": 1}}])
+        return [{"period": r["_id"], "jobs": r["jobs"]} for r in rows]
+
+    # une ligne par période, une colonne par source (une offre vue sur 2 sources compte pour chacune)
+    rows = _agg([
+        {"$match": match}, {"$unwind": "$sources"},
+        {"$group": {"_id": {"p": key, "s": "$sources"}, "jobs": {"$sum": 1}}}, {"$sort": {"_id.p": 1}},
+    ])
+    periods: dict[str, dict] = {}
+    totals: dict[str, int] = {}
+    for r in rows:
+        period, source = r["_id"]["p"], r["_id"]["s"]
+        periods.setdefault(period, {"period": period})[source] = r["jobs"]
+        totals[source] = totals.get(source, 0) + r["jobs"]
+    keys = sorted(totals, key=lambda s: -totals[s])
+    data = [{**{k: 0 for k in keys}, **row} for row in periods.values()]
+    return {"keys": keys, "totals": totals, "rows": data}
 
 
 @router.get("/top-technologies")
@@ -142,9 +160,14 @@ def salaries(f: JobFilters = Depends()):
                      "default": "other", "output": {"jobs": {"$sum": 1}}}},
     ])
     overall = _agg([{"$match": match}, {"$group": {"_id": None, "n": {"$sum": 1}, "avg": mid}}])
+    medians = salary_medians(list(get_db().jobs.find(match, SALARY_FIELDS)))
     return {
         "count": overall[0]["n"] if overall else 0,
         "average": round(overall[0]["avg"]) if overall else None,
+        "median": medians["median"],
+        "by_currency": medians["by_currency"],
+        "median_by_country": medians["by_country"],
+        "min_sample": MIN_SAMPLE,
         "distribution": [{"range": f"{int(b['_id']) // 1000}k+" if b["_id"] != "other" else "autre",
                           "jobs": b["jobs"]} for b in buckets],
         "by_experience": stats_by("experience_level"),

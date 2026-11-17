@@ -1,4 +1,4 @@
-# API FastAPI JobInsight (contexte de build = racine du projet)
+# API FastAPI JobCompass (contexte de build = racine du projet)
 FROM python:3.11-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \

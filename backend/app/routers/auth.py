@@ -1,10 +1,25 @@
+import math
 import re
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, EmailStr, Field, field_validator
 from pymongo.errors import DuplicateKeyError
 
+from app.auth_sessions import (
+    REFRESH_COOKIE,
+    RefreshError,
+    clear_refresh_cookie,
+    issue_refresh_token,
+    lock_remaining_seconds,
+    register_failure,
+    reset_failures,
+    revoke_refresh_token,
+    rotate_refresh_token,
+    set_refresh_cookie,
+)
+from app.config import get_settings
 from app.db import get_db
 from app.limiter import limiter
 from app.security import audit, create_access_token, get_current_user, hash_password, verify_password
@@ -43,9 +58,23 @@ def _public(user: dict) -> dict:
     return {"email": user["email"], "full_name": user.get("full_name"), "role": user.get("role", "viewer")}
 
 
+def _open_session(user: dict, request: Request, response: Response) -> TokenOut:
+    """Jeton d'accès court dans la réponse + refresh token dans un cookie httpOnly."""
+    set_refresh_cookie(response, issue_refresh_token(user["email"], request))
+    token, exp = create_access_token(user["email"], user.get("role", "viewer"))
+    return TokenOut(access_token=token, expires_in=exp, user=_public(user))
+
+
+def _session_expired() -> JSONResponse:
+    resp = JSONResponse(status_code=status.HTTP_401_UNAUTHORIZED,
+                        content={"detail": "Session expirée, veuillez vous reconnecter"})
+    clear_refresh_cookie(resp)
+    return resp
+
+
 @router.post("/register", response_model=TokenOut, status_code=201)
 @limiter.limit("5/minute")
-def register(request: Request, body: RegisterIn):
+def register(request: Request, response: Response, body: RegisterIn):
     user = {
         "email": body.email.lower(), "full_name": body.full_name.strip(),
         "password_hash": hash_password(body.password), "role": "viewer", "active": True,
@@ -56,22 +85,62 @@ def register(request: Request, body: RegisterIn):
     except DuplicateKeyError:
         raise HTTPException(status.HTTP_409_CONFLICT, "Un compte existe déjà avec cet e-mail") from None
     audit("register", user["email"], request)
-    token, exp = create_access_token(user["email"], user["role"])
-    return TokenOut(access_token=token, expires_in=exp, user=_public(user))
+    return _open_session(user, request, response)
 
 
 @router.post("/login", response_model=TokenOut)
 @limiter.limit("10/minute")
-def login(request: Request, body: LoginIn):
-    user = get_db().users.find_one({"email": body.email.lower()})
+def login(request: Request, response: Response, body: LoginIn):
+    email = body.email.lower()
+    remaining = lock_remaining_seconds(email)
+    if remaining:  # verrouillé : on ne vérifie même pas le mot de passe
+        audit("login_blocked", email, request)
+        raise HTTPException(
+            status.HTTP_429_TOO_MANY_REQUESTS,
+            f"Trop de tentatives échouées. Réessayez dans {math.ceil(remaining / 60)} minute(s).",
+            headers={"Retry-After": str(remaining)},
+        )
+    user = get_db().users.find_one({"email": email})
     # message volontairement identique (ne révèle pas si le compte existe)
     if not user or not user.get("active", True) or not verify_password(body.password, user["password_hash"]):
-        audit("login_failed", body.email.lower(), request)
+        audit("login_failed", email, request)
+        if register_failure(email):
+            audit("account_locked", email, request, minutes=get_settings().lockout_minutes)
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "E-mail ou mot de passe incorrect")
+    reset_failures(email)
     get_db().users.update_one({"_id": user["_id"]}, {"$set": {"last_login_at": datetime.now(timezone.utc)}})
     audit("login_success", user["email"], request)
+    return _open_session(user, request, response)
+
+
+@router.post("/refresh", response_model=TokenOut)
+@limiter.limit("30/minute")
+def refresh(request: Request, response: Response):
+    """Renouvelle la session à partir du cookie httpOnly (rotation du refresh token)."""
+    try:
+        email, new_token = rotate_refresh_token(request.cookies.get(REFRESH_COOKIE), request)
+    except RefreshError as exc:
+        if exc.reason == "réutilisé":
+            audit("refresh_token_reuse", None, request)
+        return _session_expired()
+    user = get_db().users.find_one({"email": email})
+    if not user or not user.get("active", True):
+        revoke_refresh_token(new_token)
+        return _session_expired()
+    set_refresh_cookie(response, new_token)
     token, exp = create_access_token(user["email"], user.get("role", "viewer"))
     return TokenOut(access_token=token, expires_in=exp, user=_public(user))
+
+
+@router.post("/logout", status_code=204)
+def logout(request: Request):
+    """Révoque la session côté serveur (même si le jeton d'accès a déjà expiré)."""
+    token = request.cookies.get(REFRESH_COOKIE)
+    revoke_refresh_token(token)
+    audit("logout", None, request)
+    resp = Response(status_code=204)
+    clear_refresh_cookie(resp)
+    return resp
 
 
 @router.get("/me")

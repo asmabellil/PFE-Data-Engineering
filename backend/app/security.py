@@ -42,14 +42,18 @@ def create_access_token(email: str, role: str) -> tuple[str, int]:
     now = datetime.now(timezone.utc)
     expires = s.jwt_expire_minutes * 60
     payload = {"sub": email, "role": role, "iat": now, "exp": now + timedelta(seconds=expires),
-               "iss": "jobinsight-api"}
+               "iss": "jobinsight-api", "typ": "access",
+               "jti": secrets.token_hex(16)}  # identifiant unique : deux jetons ne sont jamais identiques
     return jwt.encode(payload, s.jwt_secret, algorithm=s.jwt_algorithm), expires
 
 
 def decode_token(token: str) -> dict:
     s = get_settings()
-    return jwt.decode(token, s.jwt_secret, algorithms=[s.jwt_algorithm], issuer="jobinsight-api",
-                      options={"require": ["exp", "sub", "role"]})
+    payload = jwt.decode(token, s.jwt_secret, algorithms=[s.jwt_algorithm], issuer="jobinsight-api",
+                         options={"require": ["exp", "sub", "role", "typ"]})
+    if payload["typ"] != "access":  # seul un jeton d'accès ouvre l'API
+        raise jwt.InvalidTokenError("type de jeton invalide")
+    return payload
 
 
 # ------------------------------------------------------------------ dépendances FastAPI
