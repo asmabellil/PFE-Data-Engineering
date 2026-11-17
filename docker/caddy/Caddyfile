@@ -1,0 +1,26 @@
+# Reverse proxy HTTPS devant l'application (seul point d'entrée exposé).
+# En local, il n'y a pas de nom de domaine public : Caddy signe le certificat avec sa propre
+# autorité de certification (local_certs). En production, il suffit de remplacer « localhost »
+# par le nom de domaine pour obtenir automatiquement un certificat Let's Encrypt.
+{
+	local_certs
+	admin off
+}
+
+localhost {
+	encode gzip
+
+	header {
+		# le navigateur n'utilisera plus que HTTPS pour ce site pendant un an
+		Strict-Transport-Security "max-age=31536000"
+		# ne pas annoncer le logiciel du serveur
+		-Server
+	}
+
+	reverse_proxy frontend:80
+}
+
+# toute requête HTTP est redirigée vers HTTPS
+http://localhost {
+	redir https://localhost{uri} permanent
+}

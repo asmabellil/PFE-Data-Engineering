@@ -1,4 +1,4 @@
-# JobInsight – plateforme Big Data de collecte et d'analyse des offres d'emploi
+# JobCompass – plateforme Big Data de collecte et d'analyse des offres d'emploi
 # Démarrage : cp .env.example .env  (puis générer les secrets)  &&  docker compose up -d --build
 #
 # Sécurité : chaque service ne reçoit QUE les variables dont il a besoin (pas d'env_file global),
@@ -19,11 +19,21 @@ x-pipeline-env: &pipeline-env
   MODELS_DIR: /opt/jobinsight/models
   LOCAL_DATA_DIR: /opt/jobinsight/data
   ARBEITNOW_MAX_PAGES: ${ARBEITNOW_MAX_PAGES:-3}
+  WTTJ_TECH_ONLY: ${WTTJ_TECH_ONLY:-true}   # sitemap WTTJ : seulement les métiers Tech/Data
   PYTHONORG_MAX_PAGES: ${PYTHONORG_MAX_PAGES:-3}
   ADZUNA_APP_ID: ${ADZUNA_APP_ID:-}
   ADZUNA_APP_KEY: ${ADZUNA_APP_KEY:-}
   FRANCE_TRAVAIL_CLIENT_ID: ${FRANCE_TRAVAIL_CLIENT_ID:-}
   FRANCE_TRAVAIL_CLIENT_SECRET: ${FRANCE_TRAVAIL_CLIENT_SECRET:-}
+  # réglages optionnels des sources françaises (vide = valeur par défaut du code)
+  FRANCE_TRAVAIL_ROME_CODES: ${FRANCE_TRAVAIL_ROME_CODES:-}
+  FRANCE_TRAVAIL_KEYWORDS: ${FRANCE_TRAVAIL_KEYWORDS:-}
+  FRANCE_TRAVAIL_SINCE_DAYS: ${FRANCE_TRAVAIL_SINCE_DAYS:-}
+  FRANCE_TRAVAIL_MAX_PAGES: ${FRANCE_TRAVAIL_MAX_PAGES:-}
+  ADZUNA_COUNTRIES: ${ADZUNA_COUNTRIES:-}
+  ADZUNA_KEYWORDS: ${ADZUNA_KEYWORDS:-}
+  ADZUNA_MAX_PAGES: ${ADZUNA_MAX_PAGES:-}
+  ADZUNA_MAX_DAYS_OLD: ${ADZUNA_MAX_DAYS_OLD:-}
   PIPELINE_SERVICE_TOKEN: ${PIPELINE_SERVICE_TOKEN}
   BACKEND_INTERNAL_URL: http://backend:8000
 
@@ -68,7 +78,7 @@ services:
     command: >
       bash -c "airflow db migrate &&
       (airflow users create --username $${AIRFLOW_ADMIN_USER} --password $${AIRFLOW_ADMIN_PASSWORD}
-      --firstname Admin --lastname JobInsight --role Admin --email admin@jobinsight.local || true) &&
+      --firstname Admin --lastname JobCompass --role Admin --email admin@jobinsight.local || true) &&
       (airflow scheduler &) && exec airflow webserver"
     volumes:
       - ./airflow/dags:/opt/airflow/dags
@@ -173,11 +183,15 @@ services:
       MONGO_URI: mongodb://${MONGO_API_USER}:${MONGO_API_PASSWORD}@mongo:27017/jobinsight?authSource=jobinsight
       MONGO_DB: jobinsight
       JWT_SECRET: ${JWT_SECRET}
-      JWT_EXPIRE_MINUTES: ${JWT_EXPIRE_MINUTES:-120}
+      JWT_EXPIRE_MINUTES: ${JWT_EXPIRE_MINUTES:-15}
+      REFRESH_EXPIRE_DAYS: ${REFRESH_EXPIRE_DAYS:-7}
+      COOKIE_SECURE: ${COOKIE_SECURE:-true}    # cookie de session envoyé uniquement en HTTPS (via Caddy)
+      MAX_FAILED_LOGINS: ${MAX_FAILED_LOGINS:-5}
+      LOCKOUT_MINUTES: ${LOCKOUT_MINUTES:-15}
       ADMIN_EMAIL: ${ADMIN_EMAIL}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       PIPELINE_SERVICE_TOKEN: ${PIPELINE_SERVICE_TOKEN}
-      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://localhost:5173}
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://localhost,http://localhost:5173}
       MODELS_DIR: /opt/models
       EMBEDDING_MODEL: ${EMBEDDING_MODEL:-sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2}
       HF_HOME: /opt/hf_cache
@@ -192,7 +206,18 @@ services:
     build: ./frontend
     image: jobinsight/frontend:1.0
     depends_on: [backend]
-    ports: ["127.0.0.1:3000:80"]
+    # plus de port publié : l'application n'est joignable qu'à travers Caddy, en HTTPS
+    networks: [frontend-net]
+    restart: unless-stopped
+
+  # ------------------------------------------------------------------ HTTPS
+  caddy:
+    image: caddy:2.8.4-alpine
+    depends_on: [frontend]
+    ports: ["127.0.0.1:80:80", "127.0.0.1:443:443"]
+    volumes:
+      - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data        # autorité de certification locale et certificats
     networks: [frontend-net]
     restart: unless-stopped
 
@@ -207,3 +232,4 @@ volumes:
   minio_data:
   mongo_data:
   hf_cache:
+  caddy_data:
