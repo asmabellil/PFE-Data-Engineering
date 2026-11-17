@@ -22,4 +22,4 @@ appDb.createUser({
   roles: [{ role: "read", db: dbName }],
 });
 
-print("JobInsight : utilisateurs MongoDB créés (pipeline, api, bi)");
+print("JobCompass : utilisateurs MongoDB créés (pipeline, api, bi)");

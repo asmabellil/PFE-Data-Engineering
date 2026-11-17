@@ -1,4 +1,4 @@
-# Image Airflow + Spark (PySpark local) + code du pipeline JobInsight
+# Image Airflow + Spark (PySpark local) + code du pipeline JobCompass
 FROM apache/airflow:2.10.4-python3.11
 
 USER root

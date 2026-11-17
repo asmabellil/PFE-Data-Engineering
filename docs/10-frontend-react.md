@@ -2,9 +2,9 @@
 
 **Outils** : React 18, Vite 5 (build), React Router 6, **Recharts** (graphiques), CSS natif
 (thème clair / sombre automatique), nginx (service en production)
-**Code** : `frontend/src/` · **URL** : http://localhost:3000 (dev : `npm run dev` → http://localhost:5173)
+**Code** : `frontend/src/` · **URL** : https://localhost, servie en HTTPS par Caddy (dev : `npm run dev` → http://localhost:5173)
 
-## Pages (inspirées de la maquette JobInsight du Livrable 1, Figure 2)
+## Pages (inspirées de la maquette du Livrable 1, Figure 2)
 
 | Page | Contenu | Endpoints |
 |---|---|---|

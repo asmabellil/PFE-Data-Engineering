@@ -1,4 +1,4 @@
-# Guide Power BI – rapport « JobInsight Analytics »
+# Guide Power BI – rapport « JobCompass Analytics »
 
 Pré-requis : Power BI Desktop (gratuit, Microsoft Store) et au moins un run du DAG
 `jobinsight_pipeline` (les CSV apparaissent dans `D:\DSP\PFE\exports\`).

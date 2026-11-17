@@ -1,6 +1,6 @@
 """Étape 3 – génère la présentation PowerPoint (16:9) avec les chiffres réels et des notes d'oral.
 
-    python deliverables/build_slides.py   ->  deliverables/Presentation_PFE_JobInsight.pptx
+    python deliverables/build_slides.py   ->  deliverables/Presentation_PFE_JobCompass.pptx
 """
 import json
 import pathlib
@@ -83,7 +83,7 @@ def base(title, section=None, notes=""):
     if section:
         text(s, 1.5, 0.7, 20, 0.8, section.upper(), 11, True, BLUE)
     text(s, 1.5, 1.2, 30, 1.6, title, 28, True, INK)
-    text(s, 1.5, 18.1, 15, 0.7, "JobInsight · PFE M2 Data Engineering", 10, color=MUTED)
+    text(s, 1.5, 18.1, 15, 0.7, "JobCompass · PFE M2 Data Engineering", 10, color=MUTED)
     text(s, 30.5, 18.1, 2.5, 0.7, str(len(prs.slides)), 10, color=MUTED, align=PP_ALIGN.RIGHT)
     if notes:
         s.notes_slide.notes_text_frame.text = notes
@@ -141,7 +141,7 @@ cls, salm, dl, clu = (model("category_classifier"), model("salary_model"), model
 s = prs.slides.add_slide(BLANK)
 bg = s.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, W, H); bg.fill.solid(); bg.fill.fore_color.rgb = DARK; bg.line.fill.background()
 text(s, 2, 2.2, 30, 1, "PROJET DE FIN D'ÉTUDES · MASTER 2 DATA ENGINEERING · 2026–2027", 13, True, RGBColor(0x9D, 0xB7, 0xF5))
-text(s, 2, 4.2, 30, 3, "JobInsight", 60, True, WHITE)
+text(s, 2, 4.2, 30, 3, "JobCompass", 60, True, WHITE)
 text(s, 2, 7.6, 28, 3, "Plateforme Big Data de collecte et d'analyse des offres d'emploi", 26, color=WHITE)
 text(s, 2, 12.5, 28, 3, ["Asma BELLIL  ·  Ghaylene DRIDI  ·  Mohamed Yacine BRAHMIA", "Encadrant : à compléter  ·  4 décembre 2026"],
      16, color=RGBColor(0xC7, 0xD5, 0xF8))
@@ -396,6 +396,6 @@ bg = s.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, W, H); bg.fill.solid(); bg.fi
 text(s, 2, 6.5, 30, 3, "Merci pour votre attention", 44, True, WHITE, PP_ALIGN.CENTER)
 text(s, 2, 10, 30, 2, "Questions ?", 26, color=RGBColor(0xC7, 0xD5, 0xF8), align=PP_ALIGN.CENTER)
 
-out = HERE / "Presentation_PFE_JobInsight.pptx"
+out = HERE / "Presentation_PFE_JobCompass.pptx"
 prs.save(out)
 print("PPTX :", out, "–", len(prs.slides), "diapositives")
