@@ -87,6 +87,10 @@ def collect_source(source: str, run_id: str, settings: Settings | None = None) -
             count += 1
     finally:
         sink.close()
-    status = "success" if sink.errors == 0 else "partial"
-    log.info("source %s : %s offres publiées (%s erreurs)", source, count, sink.errors)
-    return {"source": source, "status": status, "collected": count, "errors": sink.errors}
+    # recherches abandonnées par le collecteur (ex : France Travail, Adzuna) -> run "partial"
+    warnings = list(getattr(collector, "warnings", []))
+    status = "success" if sink.errors == 0 and not warnings else "partial"
+    log.info("source %s : %s offres publiées (%s erreurs, %s avertissements)",
+             source, count, sink.errors, len(warnings))
+    return {"source": source, "status": status, "collected": count, "errors": sink.errors,
+            "warnings": warnings[:20]}

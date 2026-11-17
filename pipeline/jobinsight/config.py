@@ -1,4 +1,4 @@
-"""Configuration centralisée du pipeline JobInsight.
+"""Configuration centralisée du pipeline JobCompass.
 
 Toutes les valeurs proviennent des variables d'environnement (fichier .env chargé par
 docker compose). Aucun secret n'est écrit en dur dans le code.
@@ -6,7 +6,7 @@ docker compose). Aucun secret n'est écrit en dur dans le code.
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 def _env(name: str, default: str | None = None) -> str | None:
@@ -65,6 +65,13 @@ class Settings:
     ft_client_id: str | None
     ft_client_secret: str | None
     ft_keywords: list[str]
+    # périmètre et volume des sources françaises (valeurs par défaut = France, métiers Tech/Data)
+    ft_rome_codes: list[str] = field(default_factory=list)
+    ft_since_days: int = 0       # 0 = toutes les offres actives ; N = créées dans les N derniers jours
+    ft_max_pages: int = 0        # 0 = pas de plafond ; N = au plus N pages de 150 offres par run
+    adzuna_max_pages: int = 20   # pages de 50 offres par recherche (quota gratuit limité)
+    adzuna_max_days_old: int = 0  # 0 = pas de filtre de date
+    wttj_tech_only: bool = True  # ne garder que les intitulés Tech/Data du sitemap WTTJ (tous métiers sinon)
 
 
 def get_settings() -> Settings:
@@ -84,7 +91,7 @@ def get_settings() -> Settings:
         models_dir=_env("MODELS_DIR", "./models"),
         user_agent=_env(
             "HTTP_USER_AGENT",
-            "JobInsight-PFE/1.0 (projet etudiant Master Data Engineering)",
+            "JobCompass-PFE/1.0 (projet etudiant Master Data Engineering)",
         ),
         request_delay_s=float(_env("REQUEST_DELAY_S", "1.0")),
         arbeitnow_max_pages=_env_int("ARBEITNOW_MAX_PAGES", 3),
@@ -94,11 +101,20 @@ def get_settings() -> Settings:
         wttj_max_jobs=_env_int("WTTJ_MAX_JOBS", 5000),
         wttj_days=_env_int("WTTJ_DAYS", 7),
         wttj_langs=_env_list("WTTJ_LANGS", "fr"),
+        wttj_tech_only=(_env("WTTJ_TECH_ONLY", "true") or "true").lower() in ("1", "true", "yes", "oui"),
         adzuna_app_id=_env("ADZUNA_APP_ID"),
         adzuna_app_key=_env("ADZUNA_APP_KEY"),
         adzuna_countries=_env_list("ADZUNA_COUNTRIES", "fr"),
-        adzuna_keywords=_env_list("ADZUNA_KEYWORDS", "data,developpeur,devops"),
+        adzuna_keywords=_env_list(
+            "ADZUNA_KEYWORDS", "data engineer,data analyst,data scientist,développeur,devops,cybersécurité"
+        ),
+        adzuna_max_pages=_env_int("ADZUNA_MAX_PAGES", 20),
+        adzuna_max_days_old=_env_int("ADZUNA_MAX_DAYS_OLD", 0),
         ft_client_id=_env("FRANCE_TRAVAIL_CLIENT_ID"),
         ft_client_secret=_env("FRANCE_TRAVAIL_CLIENT_SECRET"),
-        ft_keywords=_env_list("FRANCE_TRAVAIL_KEYWORDS", "data,developpeur"),
+        # codes ROME du domaine M18 "Systèmes d'information" (développement, admin/prod SI, conseil SI...)
+        ft_rome_codes=_env_list("FRANCE_TRAVAIL_ROME_CODES", "M1801,M1802,M1803,M1805,M1806,M1810"),
+        ft_keywords=_env_list("FRANCE_TRAVAIL_KEYWORDS", "data,devops,cybersécurité"),
+        ft_since_days=_env_int("FRANCE_TRAVAIL_SINCE_DAYS", 0),
+        ft_max_pages=_env_int("FRANCE_TRAVAIL_MAX_PAGES", 0),
     )
