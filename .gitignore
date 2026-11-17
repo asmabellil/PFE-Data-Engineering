@@ -1,7 +1,13 @@
-# secrets
+# secrets (.env et toutes ses copies, sauf le modèle .env.example)
 .env
+.env.*
+!.env.example
 *.pem
 *.key
+
+# notes de travail personnelles (non partagées)
+PLAN.md
+PLAN_initial.md
 
 # profils de navigateur (cookies, sessions, historique) : jamais dans Git
 **/edge-profile/
