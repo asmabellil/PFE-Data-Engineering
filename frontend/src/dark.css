@@ -1,0 +1,41 @@
+/* Thème sombre : on redéfinit les mêmes variables, les composants ne changent pas.
+   Les surfaces s'inversent dans l'ordre (fond le plus sombre, cartes un peu plus claires),
+   les couleurs vives sont éclaircies et leurs versions claires deviennent des transparences. */
+:root[data-theme="dark"] {
+  --red: #FF6B7D;    --red-lt: rgba(255, 107, 125, 0.16);  --red-dk: #F8485E;
+  --green: #2DD4A7;  --green-lt: rgba(45, 212, 167, 0.16);
+  --amber: #F5B83D;  --amber-lt: rgba(245, 184, 61, 0.16);
+  --blue: #6E93FF;   --blue-lt: rgba(110, 147, 255, 0.16);
+  --purple: #A78BFA; --purple-lt: rgba(167, 139, 250, 0.16);
+  --pink: #F472B6;   --pink-lt: rgba(244, 114, 182, 0.16);
+  --cyan: #22D3EE;   --cyan-lt: rgba(34, 211, 238, 0.16);
+  --orange: #FB923C; --orange-lt: rgba(251, 146, 60, 0.16);
+  --teal: #2DD4BF;   --lime: #A3E635;
+  --indigo: #818CF8; --brown: #D6A23D;  --slate: #94A3B8;  --olive: #84CC16;
+  /* sur fond sombre, « plus » = plus lumineux : le dégradé s'inverse */
+  --seq-1: #4A1C24;  --seq-2: #7A2A37;  --seq-3: #C2384D;  --seq-4: #FF6B7D;  --seq-5: #FFB3BD;
+
+  --w: #171A20;
+  --g50: #0F1115;
+  --g100: #1F232B;  --g150: #262B34;  --g200: #2F3540;
+  --g300: #4A5160;  --g400: #7D8594;
+  --g500: #9AA1AE;  --g600: #B4BAC5;  --g700: #CDD2DA;
+  --g900: #EDEFF3;
+
+  --sb-hover: #1F232B;
+  --sb-active: rgba(255, 107, 125, 0.14);
+  --sb-border: rgba(255, 255, 255, 0.06);
+  --nav-bg: #13161B;
+
+  /* Ombres plus fortes, avec un liseré clair très léger qui détache les cartes du fond */
+  --sh: 0 1px 2px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.03);
+  --shm: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --shl: 0 8px 40px rgba(0, 0, 0, 0.6);
+  --sh-menu: 0 8px 24px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --focus-ring: 0 0 0 3px rgba(110, 147, 255, 0.25);
+  --overlay: rgba(0, 0, 0, 0.6);
+}
+
+/* Le rouge clair sur fond sombre manque de contraste en texte d'alerte : on garde la teinte vive */
+:root[data-theme="dark"] .error,
+:root[data-theme="dark"] .alert-error { color: var(--red); }

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context";
+import Alert from "../components/Alert";
+import Icon from "../components/Icon";
 
 export default function Login() {
   const { user, login } = useAuth();
@@ -12,29 +14,40 @@ export default function Login() {
 
   const submit = async (e) => {
     e.preventDefault();
+    if (busy) return; // le bouton reste actif visuellement, mais un seul envoi à la fois
     setBusy(true); setError(null);
     try { await login(form.email, form.password, mode === "register", form.full_name); }
     catch (err) { setError(err.message); }
     finally { setBusy(false); }
   };
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
+  const register = mode === "register";
 
   return (
     <div className="login-page">
-      <form className="card login-card" onSubmit={submit}>
-        <div className="brand" style={{ padding: 0 }}>
-          <div className="brand-logo" aria-hidden><span style={{ height: 9 }} /><span style={{ height: 15 }} /><span style={{ height: 22 }} /></div>
-          <div><b>Job<em>Insight</em></b><div className="muted small">Plateforme Big Data d'analyse des offres d'emploi</div></div>
+      <form className="card login-card fade-in" onSubmit={submit}>
+        <div>
+          <div className="brand"><Icon name="compass" size={26} /><span>Job<em>Compass</em></span></div>
+          <div className="brand-tagline">La boussole du marché de l'emploi</div>
         </div>
-        <h1>{mode === "login" ? "Connexion" : "Créer un compte"}</h1>
-        {mode === "register" && <input placeholder="Nom complet" value={form.full_name} onChange={set("full_name")} required minLength={2} />}
-        <input type="email" placeholder="E-mail" autoComplete="username" value={form.email} onChange={set("email")} required />
-        <input type="password" placeholder="Mot de passe" autoComplete={mode === "login" ? "current-password" : "new-password"} value={form.password} onChange={set("password")} required minLength={mode === "register" ? 8 : 1} />
-        {mode === "register" && <div className="muted small">8 caractères minimum, au moins une lettre et un chiffre.</div>}
-        {error && <div className="error">{error}</div>}
-        <button disabled={busy}>{busy ? "…" : mode === "login" ? "Se connecter" : "Créer le compte"}</button>
-        <button type="button" className="ghost" onClick={() => { setMode(mode === "login" ? "register" : "login"); setError(null); }}>
-          {mode === "login" ? "Pas de compte ? S'inscrire" : "J'ai déjà un compte"}
+        <h1>{register ? "Créer un compte" : "Connexion"}</h1>
+        {register && (
+          <label className="field">Nom complet
+            <input value={form.full_name} onChange={set("full_name")} required minLength={2} autoComplete="name" />
+          </label>
+        )}
+        <label className="field">E-mail
+          <input type="email" autoComplete="username" value={form.email} onChange={set("email")} required />
+        </label>
+        <label className="field">Mot de passe
+          <input type="password" autoComplete={register ? "new-password" : "current-password"} value={form.password}
+            onChange={set("password")} required minLength={register ? 8 : 1} />
+          {register && <span className="hint">8 caractères minimum, avec au moins une lettre et un chiffre.</span>}
+        </label>
+        {error && <Alert key={error} kind="error">{error}</Alert>}
+        <button aria-busy={busy}>{busy ? "Vérification…" : register ? "Créer le compte" : "Se connecter"}</button>
+        <button type="button" className="ghost" onClick={() => { setMode(register ? "login" : "register"); setError(null); }}>
+          {register ? "J'ai déjà un compte" : "Pas de compte ? S'inscrire"}
         </button>
       </form>
     </div>

@@ -59,7 +59,7 @@ export default function Jobs() {
                   <tr key={j.dedup_key} className="clickable" onClick={() => setOpen(j.dedup_key)}>
                     <td><b>{j.title}</b><div className="muted small">{(j.sources || [j.source]).map(label).join(" · ")}</div></td>
                     <td>{j.company}</td>
-                    <td>{[j.city, j.country].filter(Boolean).join(", ") || "–"}{j.remote && <div className="small">🏠 télétravail</div>}</td>
+                    <td>{[j.city, j.country].filter(Boolean).join(", ") || "–"}{j.remote && <div className="small muted">Télétravail</div>}</td>
                     <td>{j.contract_type ? label(j.contract_type) : "–"}</td>
                     <td>{j.experience_level ? label(j.experience_level) : "–"}</td>
                     <td>{j.salary_annual_min_eur ? `${fmtEur(j.salary_annual_min_eur)} – ${fmtEur(j.salary_annual_max_eur)}` : "–"}</td>

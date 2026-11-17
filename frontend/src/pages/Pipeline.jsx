@@ -1,8 +1,16 @@
 import { useApi, useAuth } from "../context";
 import { fmtInt } from "../api";
-import { HBar, State } from "../components/charts";
+import { COMPLETENESS_STATES, completenessColor, Donut, HBar, State } from "../components/charts";
+import Icon from "../components/Icon";
 
-const STATUS = { success: "✅", partial: "⚠️", failed: "❌", skipped: "⏭️" };
+// Un état porte toujours une couleur ET un mot (jamais la couleur seule)
+const STATUS = {
+  success: ["ok", "check", "réussie"], partial: ["warn", "alert", "partielle"],
+  failed: ["ko", "x", "échec"], skipped: ["", "skip", "sautée"],
+};
+const GATE_LEVEL = {
+  ok: ["ok", "check", "conforme"], warning: ["warn", "alert", "avertissement"], blocking: ["ko", "x", "bloquant"],
+};
 
 export default function Pipeline() {
   const { user } = useAuth();
@@ -25,7 +33,10 @@ export default function Pipeline() {
         <section className="card">
           <h2>Complétude des attributs (entrepôt)</h2>
           <div style={{ height: 300 }}>
-            {completeness.length > 0 && <HBar data={completeness} unit="%" formatter={(v) => `${v} %`} />}
+            {completeness.length > 0 && (
+              <HBar data={completeness} unit="%" formatter={(v) => `${v} %`} colorOf={(r) => completenessColor(r.jobs)}
+                keyItems={COMPLETENESS_STATES.filter((st) => completeness.some((r) => completenessColor(r.jobs) === st.color))} />
+            )}
           </div>
           {summary.data && <p className="muted small">{fmtInt(summary.data.jobs_seen_on_multiple_sources)} offres vues sur plusieurs sources (doublons inter-sources fusionnés).</p>}
         </section>
@@ -34,11 +45,33 @@ export default function Pipeline() {
           <State loading={reports.loading} error={reports.error} empty={reports.data && !lastReport} />
           {lastReport && (
             <>
+              <div style={{ height: 170 }}>
+                <Donut
+                  dimension="quality"
+                  total={lastReport.records_total}
+                  data={[
+                    { label: "valid", jobs: lastReport.records_processed },
+                    { label: "duplicate", jobs: lastReport.duplicates_removed },
+                    { label: "quarantine", jobs: lastReport.records_quarantine },
+                  ].filter((d) => d.jobs > 0)}
+                />
+              </div>
               <p className="small">
                 Lot <b>{lastReport.run_id}</b> : {fmtInt(lastReport.records_total)} offres brutes → {fmtInt(lastReport.records_valid)} valides,
                 {" "}{fmtInt(lastReport.records_quarantine)} en quarantaine, {fmtInt(lastReport.duplicates_removed)} doublons supprimés,
-                {" "}<b>{fmtInt(lastReport.records_processed)}</b> offres traitées. Unicité : {lastReport.uniqueness_ok ? "✅" : "❌"} · Complétude moyenne : {Math.round(lastReport.avg_completeness * 100)} %
+                {" "}<b>{fmtInt(lastReport.records_processed)}</b> offres traitées. Unicité : {lastReport.uniqueness_ok ? <span className="tag ok"><Icon name="check" size={12} /> respectée</span> : <span className="tag ko"><Icon name="x" size={12} /> doublons restants</span>} · Complétude moyenne : {Math.round(lastReport.avg_completeness * 100)} %
               </p>
+              {lastReport.gate && (
+                <div className="mb" style={{ marginBottom: 16 }}>
+                  <div className="stat-label" style={{ marginBottom: 6 }}>Porte de qualité du lot</div>
+                  {lastReport.gate.checks.map((c, i) => (
+                    <div key={`${c.code}-${i}`} className="small" style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 4 }}>
+                      <span className={`tag ${GATE_LEVEL[c.level][0]}`}><Icon name={GATE_LEVEL[c.level][1]} size={12} /> {GATE_LEVEL[c.level][2]}</span>
+                      <span>{c.message}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
               <table>
                 <thead><tr><th>Contrôle</th><th>Dimension</th><th>Occurrences</th></tr></thead>
                 <tbody>{lastReport.issues.map((i) => <tr key={i.code}><td>{i.code}</td><td>{i.dimension}</td><td>{i.count}</td></tr>)}</tbody>
@@ -61,8 +94,8 @@ export default function Pipeline() {
                   <td className="small">{new Date(r.started_at).toLocaleString("fr-FR")}</td>
                   <td className="small">
                     {Object.entries(r.tasks || {}).map(([t, v]) => (
-                      <span key={t} className="tag" title={JSON.stringify(v.stats)}>
-                        {STATUS[v.status] || "•"} {t}
+                      <span key={t} className={`tag ${STATUS[v.status]?.[0] || ""}`} title={`${t} : ${STATUS[v.status]?.[2] || v.status}`}>
+                        {STATUS[v.status] && <Icon name={STATUS[v.status][1]} size={12} />} {t}
                         {v.stats?.collected !== undefined && ` (${v.stats.collected})`}
                         {v.stats?.inserted !== undefined && ` (+${v.stats.inserted} / ~${v.stats.updated})`}
                       </span>
