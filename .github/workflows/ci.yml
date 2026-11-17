@@ -4,7 +4,7 @@ name: CI
 
 on:
   push:
-    branches: [main, develop, "feature/**"]
+    branches: [main, develop, v2, "feature/**"]
   pull_request:
 
 permissions:
