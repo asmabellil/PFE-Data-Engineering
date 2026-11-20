@@ -260,7 +260,8 @@ def test_contract_rejections_aggregates_runs_and_reasons(client):
 
 
 def test_monitoring_endpoints_require_analyst_role(client):
-    client.post("/api/auth/register", json={"email": "v@test.io", "password": "abcdefg1", "full_name": "V"})
+    r = client.post("/api/auth/register", json={"email": "v@test.io", "password": "abcdefg1", "full_name": "Viewer"})
+    assert r.status_code == 201  # nouveau compte = rôle viewer (nom de 2 caractères au moins)
     h = auth_headers(client, {"email": "v@test.io", "password": "abcdefg1"})
     assert client.get("/api/admin/lifecycle", headers=h).status_code == 403
     assert client.get("/api/admin/contract-rejections", headers=h).status_code == 403
