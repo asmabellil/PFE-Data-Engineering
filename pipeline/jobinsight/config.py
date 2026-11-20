@@ -72,6 +72,7 @@ class Settings:
     adzuna_max_pages: int = 20   # pages de 50 offres par recherche (quota gratuit limité)
     adzuna_max_days_old: int = 0  # 0 = pas de filtre de date
     wttj_tech_only: bool = True  # ne garder que les intitulés Tech/Data du sitemap WTTJ (tous métiers sinon)
+    kafka_topic_dlq: str = "jobs.dlq"  # file de rejet : offres qui violent le contrat de données
 
 
 def get_settings() -> Settings:
@@ -80,6 +81,7 @@ def get_settings() -> Settings:
         kafka_bootstrap=_env("KAFKA_BOOTSTRAP_SERVERS", "localhost:29092"),
         kafka_topic_raw=_env("KAFKA_TOPIC_RAW", "jobs.raw"),
         kafka_group_lake=_env("KAFKA_GROUP_LAKE", "lake-writer"),
+        kafka_topic_dlq=_env("KAFKA_TOPIC_DLQ", "jobs.dlq"),
         minio_endpoint=_env("MINIO_ENDPOINT", "http://localhost:9000"),
         minio_access_key=_env("MINIO_ROOT_USER", "minioadmin"),
         minio_secret_key=_env("MINIO_ROOT_PASSWORD", "minioadmin"),

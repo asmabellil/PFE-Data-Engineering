@@ -2,8 +2,10 @@
 ### DAG `jobinsight_pipeline` – pipeline de données de bout en bout
 
 ```
-collect_<source> (x6, en parallèle)  ->  Kafka topic jobs.raw
+collect_<source> (x7, en parallèle)  ->  contrat de données -> Kafka jobs.raw (conformes)
+                                                            -> Kafka jobs.dlq (rejetées + raison)
         -> ingest_to_datalake        Kafka -> MinIO raw/<source>/<date>/batch_<run>.jsonl
+                                              + dlq/<date>/batch_<run>.jsonl (file de rejet)
         -> spark_etl_quality         Spark : nettoyage, normalisation, enrichissement, Data Quality,
                                      déduplication -> processed/ + quarantine/ + rapport qualité
         -> quality_gate              porte de qualité du lot : taux de quarantaine (bloquant),
@@ -104,7 +106,7 @@ with DAG(
         _record("ingest_to_datalake", stats)
         if stats["messages"] == 0:
             raise AirflowSkipException("aucun message à ingérer")
-        return {"messages": stats["messages"], "files": len(stats["files"])}
+        return {"messages": stats["messages"], "files": len(stats["files"]), "dlq": stats["dlq"]["records"]}
 
     @task
     def spark_etl_quality():

@@ -4,6 +4,7 @@ Organisation des zones (cf. Livrable 1 §10.3 et §13) :
 
     datalake/
     ├── raw/<source>/<YYYY-MM-DD>/batch_<run>.jsonl        données brutes, immuables
+    ├── dlq/<YYYY-MM-DD>/batch_<run>.jsonl                 offres rejetées par le contrat de données
     ├── processed/jobs/<YYYY-MM-DD>/<run>/*.parquet        données nettoyées / dédupliquées
     ├── quarantine/<YYYY-MM-DD>/<run>/*.parquet            données non conformes (Data Quality)
     ├── gold/<kpi>/<run>/*.parquet                         agrégats analytiques (KPIs)
@@ -90,3 +91,8 @@ class DataLake:
 
 def raw_key(source: str, date: str, run_id: str) -> str:
     return f"raw/{source}/{date}/batch_{run_id}.jsonl"
+
+
+def dlq_key(date: str, run_id: str) -> str:
+    """Offres rejetées par le contrat de données (file de rejet), toutes sources confondues."""
+    return f"dlq/{date}/batch_{run_id}.jsonl"
