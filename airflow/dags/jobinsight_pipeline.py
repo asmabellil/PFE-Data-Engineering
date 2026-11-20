@@ -15,6 +15,8 @@ collect_<source> (x7, en parallèle)  ->  contrat de données -> Kafka jobs.raw 
         -> tag_scope                 étiquette Tech/Data sur chaque offre (filtre « Tech/Data seulement »)
         -> spark_analytics_kpis      KPIs (gold/) + exports CSV Power BI
         -> refresh_semantic_index    embeddings Deep Learning (service backend)
+   tag_scope -> update_lifecycle     branche parallèle : statut active / expirée / sortie de fenêtre,
+                                     âge des offres, snapshot lifecycle_snapshots (non bloquante)
 ```
 
 - Planification : toutes les 6 h (respect des limites d'appel des API, ex. Remotive ≤ 4/jour).
@@ -160,6 +162,16 @@ with DAG(
         return stats
 
     @task
+    def update_lifecycle():
+        """Cycle de vie des offres, à partir de l'historisation et de l'historique des runs."""
+        from jobinsight.warehouse.lifecycle import update_lifecycle as run_lifecycle
+        from jobinsight.warehouse.mongo_loader import get_db
+
+        stats = run_lifecycle(get_db(), run_id=_batch_id())
+        _record("update_lifecycle", stats)
+        return stats
+
+    @task
     def spark_analytics_kpis():
         from jobinsight.analytics.spark_analytics import run_analytics
 
@@ -184,4 +196,6 @@ with DAG(
 
     ingest = ingest_to_datalake()
     collect_tasks >> ingest
-    ingest >> spark_etl_quality() >> quality_gate() >> load_mongodb() >> ml_enrich_industry() >> tag_scope() >> spark_analytics_kpis() >> refresh_semantic_index()
+    scope = ingest >> spark_etl_quality() >> quality_gate() >> load_mongodb() >> ml_enrich_industry() >> tag_scope()
+    scope >> spark_analytics_kpis() >> refresh_semantic_index()
+    scope >> update_lifecycle()  # branche parallèle : un échec ne bloque ni les KPIs ni la recherche

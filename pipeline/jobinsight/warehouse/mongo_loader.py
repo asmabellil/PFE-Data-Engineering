@@ -41,6 +41,8 @@ def ensure_indexes(db) -> None:
     db.quality_reports.create_index("run_id", unique=True)
     db.users.create_index("email", unique=True)
     db.kpi_snapshots.create_index([("created_at", ASCENDING)])
+    jobs.create_index("lifecycle.status")                       # filtre active / expirée / hors fenêtre
+    db.lifecycle_snapshots.create_index([("created_at", DESCENDING)])
 
 
 def _clean_value(v):

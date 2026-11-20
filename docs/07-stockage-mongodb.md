@@ -27,6 +27,40 @@ UpdateOne({"dedup_key": key}, {
 ```
 Envoyé par paquets de 1 000 (`bulk_write`, `ordered=False`).
 
+## Cycle de vie des offres
+**Code** : `pipeline/jobinsight/warehouse/lifecycle.py` · **Tâche Airflow** : `update_lifecycle`
+(branche parallèle après `tag_scope`, un échec ne bloque pas les KPIs) · **Tests** : `pipeline/tests/test_lifecycle.py`
+
+L'historisation (`first_seen_at`, `last_seen_at`) et l'historique des runs (`pipeline_runs`)
+permettent de savoir si une offre est toujours en ligne. Une absence n'a pas le même sens selon
+la source :
+
+| Type de source | Sources | Une offre absente de la collecte veut dire |
+|---|---|---|
+| Liste complète | Remotive, python.org, France Travail | qu'elle a été **retirée** (pourvue ou abandonnée) |
+| Fenêtre récente | WTTJ (sitemap des 7 derniers jours, 5 000 offres au plus), Arbeitnow (3 pages), Jobicy, Adzuna | seulement qu'elle est **sortie de la fenêtre** de collecte |
+
+Statut écrit dans `jobs.lifecycle.status` :
+- `active` : vue lors de la dernière collecte réussie de sa source
+- `expired` : source à liste complète, absente des 2 dernières collectes réussies (une collecte
+  manquée est tolérée, au cas où l'API aurait eu un raté)
+- `out_of_window` : source à fenêtre, absente de la dernière collecte réussie
+
+Seules les collectes **réussies et chargées** comptent : un run bloqué par la porte de qualité ne
+prouve pas qu'une offre a disparu. Le même document porte aussi `age_days` (depuis la date de
+publication de la source), `observed_days` (durée de suivi), `missed_runs` et `expired_at`.
+
+À chaque run, un snapshot est ajouté dans `lifecycle_snapshots` : répartition par statut et par
+source, âge médian des offres actives, offres ouvertes depuis plus de 30 jours, nouvelles offres et
+offres expirées sur 24 h, durée de vie médiane des offres expirées, et âge médian par périmètre
+Tech/Data, ville, niveau d'expérience et type de contrat (groupes d'au moins 20 offres). Le secteur
+(`industry`, rempli à 6 %) n'est pas retenu.
+
+Premier calcul, le 20/11/2026 sur 14 434 offres (1,8 s) : 6 141 actives, 8 291 sorties de fenêtre,
+2 expirées. Sans cette distinction, 8 293 offres auraient été annoncées comme retirées à tort. Les
+indicateurs d'âge deviennent plus parlants avec l'historique et avec France Travail, source à liste
+complète dont les offres restent en ligne plusieurs semaines.
+
 ## Index
 | Index | Usage |
 |---|---|
@@ -34,6 +68,7 @@ Envoyé par paquets de 1 000 (`bulk_write`, `ordered=False`).
 | `publication_date` (desc) | tri, filtres de période, timeline |
 | `country`, `contract_type`, `experience_level`, `industry`, `sources`, `technologies`, `skills`, `remote`, `cluster_id` | filtres du dashboard |
 | index **texte** pondéré (titre ×10, entreprise ×5, description ×1) | recherche plein texte |
+| `lifecycle.status` | filtre offres actives, expirées, hors fenêtre |
 
 ## KPIs par agrégation (API)
 Exemple « Top technologies » :
