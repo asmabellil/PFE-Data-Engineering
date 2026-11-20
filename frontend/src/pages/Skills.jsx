@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useApi, useFilters } from "../context";
-import { ChartCard, HBar, MultiLine } from "../components/charts";
+import { categoryKey, ChartCard, colorFor, HBar, MultiLine } from "../components/charts";
 
 const SKILL_CATS = ["Technique", "Comportementale", "Langue"];
 
@@ -22,7 +22,8 @@ export default function Skills() {
 
       <div className="grid g2" style={{ marginBottom: 16 }}>
         <ChartCard title="Technologies les plus demandées" subtitle="Top 25" height={560}>
-          {tech.data && <HBar data={tech.data} />}
+          {tech.data && <HBar data={tech.data} colorOf={(r, i) => colorFor("techCategory", r.category, i)}
+            keyItems={categoryKey(tech.data, "category", "techCategory")} />}
         </ChartCard>
         <div className="grid" style={{ alignContent: "start" }}>
           <section className="card">

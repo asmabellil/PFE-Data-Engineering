@@ -1,4 +1,4 @@
-# 🗺️ Roadmap – JobInsight (PFE M2 Data Engineering)
+# 🗺️ Roadmap – JobCompass (PFE M2 Data Engineering)
 
 > **Projet** : plateforme Big Data de collecte et d'analyse des offres d'emploi
 > **Équipe** : Asma BELLIL · Ghaylene DRIDI · Mohamed Yacine BRAHMIA
@@ -91,7 +91,7 @@ Le fichier `.env` (secrets aléatoires) a déjà été généré. Identifiants :
 
 | Interface | URL |
 |---|---|
-| Application React | http://localhost:3000 |
+| Application React | https://localhost (HTTPS via Caddy) |
 | API (Swagger) | http://localhost:8000/docs |
 | Airflow | http://localhost:8080 |
 | MinIO (Data Lake) | http://localhost:9001 |
@@ -116,7 +116,7 @@ Importer les CSV de `exports/`, créer le modèle en étoile + mesures DAX fourn
 
 ### Étape 6 – Git / GitLab (👤)
 ```bash
-git init && git checkout -b main && git add . && git commit -m "JobInsight MVP"
+git init && git checkout -b main && git add . && git commit -m "JobCompass MVP"
 git checkout -b develop
 git remote add origin <url-gitlab> && git push -u origin main develop
 ```
@@ -160,8 +160,8 @@ Branches `feature/*` comme prévu au Livrable 1 §19.2. **Ne jamais committer `.
 ---
 
 ### ✅ Livrables générés (dossier `deliverables/`)
-- `Rapport_PFE_JobInsight.pdf` + `.docx` (éditable) – 27 pages, chiffres réels
-- `Presentation_PFE_JobInsight.pptx` – 23 diapositives avec notes d'oral
+- `Rapport_PFE_JobCompass.pdf` + `.docx` (éditable) – 27 pages, chiffres réels
+- `Presentation_PFE_JobCompass.pptx` – 23 diapositives avec notes d'oral
 - Régénérer avec les derniers chiffres (plateforme lancée) :
   ```powershell
   D:\DSP\.venvs\jobinsight\Scripts\python deliverables\collect_stats.py

@@ -2,7 +2,7 @@
 
 <div class="cover-top">Master 2 Data Engineering · Projet de Fin d'Études · Année universitaire 2026–2027</div>
 
-<h1 class="cover-title">JobInsight</h1>
+<h1 class="cover-title">JobCompass</h1>
 
 <h2 class="cover-h2">Conception et réalisation d'une plateforme Big Data de collecte et d'analyse des offres d'emploi</h2>
 
@@ -60,7 +60,7 @@ Le projet a suivi une démarche **Agile** en sprints courts (analyse et concepti
 
 ## Architecture générale
 
-![Architecture de la plateforme JobInsight](img/architecture.png)
+![Architecture de la plateforme JobCompass](img/architecture.png)
 
 La plateforme est entièrement conteneurisée (8 services Docker) et orchestrée par Apache Airflow. Le tableau suivant relie chaque couche de l'architecture fonctionnelle du livrable 1 à la technologie retenue.
 
@@ -407,7 +407,7 @@ Sur ce volume d'apprentissage réduit, le réseau de neurones **n'apporte pas de
 
 ## Bilan
 
-Le projet répond à la problématique posée : JobInsight collecte automatiquement des offres d'emploi issues de cinq sources actives (et deux sources supplémentaires activables), les ingère via Kafka, les conserve dans un Data Lake organisé en zones, les nettoie, les enrichit, contrôle leur qualité et les déduplique avec Spark, les historise dans MongoDB puis les restitue dans une application web sécurisée, dans Power BI et à travers des fonctionnalités d'intelligence artificielle. L'ensemble est orchestré par Airflow et déployable en une commande grâce à Docker. Au {{date}}, l'entrepôt compte {{total}} offres de {{companies}} entreprises.
+Le projet répond à la problématique posée : JobCompass collecte automatiquement des offres d'emploi issues de cinq sources actives (et deux sources supplémentaires activables), les ingère via Kafka, les conserve dans un Data Lake organisé en zones, les nettoie, les enrichit, contrôle leur qualité et les déduplique avec Spark, les historise dans MongoDB puis les restitue dans une application web sécurisée, dans Power BI et à travers des fonctionnalités d'intelligence artificielle. L'ensemble est orchestré par Airflow et déployable en une commande grâce à Docker. Au {{date}}, l'entrepôt compte {{total}} offres de {{companies}} entreprises.
 
 Tous les critères de réussite du MVP définis dans le livrable 1 sont atteints : pipeline fonctionnel de la collecte au tableau de bord, données brutes conservées et historisées, doublons détectés, contrôles de qualité automatiques, KPIs disponibles, pipeline rejouable, projet documenté et reproductible.
 

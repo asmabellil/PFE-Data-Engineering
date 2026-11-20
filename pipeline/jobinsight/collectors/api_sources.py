@@ -2,7 +2,7 @@
 
 Sources publiques sans clé : Arbeitnow, Jobicy, Remotive.
 Sources avec clé (activées seulement si les identifiants sont fournis dans .env) :
-Adzuna, France Travail.
+Adzuna (``adzuna.py``) et France Travail (``france_travail.py``), dans leurs propres modules.
 
 Conditions d'utilisation respectées :
 - Remotive : max ~4 appels / jour, lien de retour + mention de la source.
@@ -71,91 +71,3 @@ class RemotiveCollector(BaseCollector):
         jobs = data.get("jobs", [])
         self.log.info("%s offres", len(jobs))
         yield from jobs
-
-
-class AdzunaCollector(BaseCollector):
-    """API Adzuna (clé gratuite sur https://developer.adzuna.com)."""
-
-    name = "adzuna"
-    URL = "https://api.adzuna.com/v1/api/jobs/{country}/search/{page}"
-
-    def is_enabled(self):
-        if self.settings.adzuna_app_id and self.settings.adzuna_app_key:
-            return True, ""
-        return False, "ADZUNA_APP_ID / ADZUNA_APP_KEY absents"
-
-    def source_id(self, payload):
-        return payload["id"]
-
-    def fetch(self) -> Iterator[dict[str, Any]]:
-        for country in self.settings.adzuna_countries:
-            for kw in self.settings.adzuna_keywords:
-                for page in (1, 2):
-                    data = self.get_json(
-                        self.URL.format(country=country, page=page),
-                        params={
-                            "app_id": self.settings.adzuna_app_id,
-                            "app_key": self.settings.adzuna_app_key,
-                            "results_per_page": 50,
-                            "what": kw,
-                            "content-type": "application/json",
-                        },
-                    )
-                    results = data.get("results", [])
-                    for r in results:
-                        r["_country"] = country
-                    yield from results
-                    self.polite_pause()
-                    if len(results) < 50:
-                        break
-
-
-class FranceTravailCollector(BaseCollector):
-    """API Offres d'emploi v2 de France Travail (inscription sur francetravail.io)."""
-
-    name = "france_travail"
-    TOKEN_URL = (
-        "https://entreprise.francetravail.fr/connexion/oauth2/access_token?realm=%2Fpartenaire"
-    )
-    SEARCH_URL = "https://api.francetravail.io/partenaire/offresdemploi/v2/offres/search"
-
-    def is_enabled(self):
-        if self.settings.ft_client_id and self.settings.ft_client_secret:
-            return True, ""
-        return False, "FRANCE_TRAVAIL_CLIENT_ID / SECRET absents"
-
-    def source_id(self, payload):
-        return payload["id"]
-
-    def _token(self) -> str:
-        resp = self.session.post(
-            self.TOKEN_URL,
-            data={
-                "grant_type": "client_credentials",
-                "client_id": self.settings.ft_client_id,
-                "client_secret": self.settings.ft_client_secret,
-                "scope": "api_offresdemploiv2 o2dsoffre",
-            },
-            timeout=30,
-        )
-        resp.raise_for_status()
-        return resp.json()["access_token"]
-
-    def fetch(self) -> Iterator[dict[str, Any]]:
-        headers = {"Authorization": f"Bearer {self._token()}"}
-        for kw in self.settings.ft_keywords:
-            for start in (0, 150):
-                resp = self.session.get(
-                    self.SEARCH_URL,
-                    headers=headers,
-                    params={"motsCles": kw, "range": f"{start}-{start + 149}"},
-                    timeout=30,
-                )
-                if resp.status_code == 204:  # aucun résultat
-                    break
-                resp.raise_for_status()
-                results = resp.json().get("resultats", [])
-                yield from results
-                self.polite_pause()
-                if len(results) < 150:
-                    break

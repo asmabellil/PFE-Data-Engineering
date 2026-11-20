@@ -52,3 +52,11 @@ des images (Trivy), sauvegardes MongoDB / MinIO chiffrées.
 - 11 tentatives de login en 1 min → **429**.
 - Compass : `users.password_hash` commence par `$2b$` (bcrypt).
 - Page Pipeline (admin) : journal d'audit.
+
+## HTTPS (ajouté le 17/11/2026)
+
+- Un reverse proxy **Caddy** (`docker/caddy/Caddyfile`) est le seul point d'entrée de l'application : https://localhost. Le conteneur du front n'expose plus de port.
+- En local, Caddy signe le certificat avec sa propre autorité de certification (`local_certs`). En production, remplacer `localhost` par le nom de domaine suffit pour obtenir un certificat Let's Encrypt.
+- Toute requête HTTP est redirigée vers HTTPS (301). L'en-tête `Strict-Transport-Security` (HSTS, un an) oblige le navigateur à rester en HTTPS. L'en-tête `Server` est retiré.
+- Le cookie de session (refresh token) porte l'attribut `Secure` (`COOKIE_SECURE=true`) : il n'est jamais envoyé en clair.
+- Pour éviter l'avertissement du navigateur en local, on peut faire confiance au certificat racine de Caddy (`/data/caddy/pki/authorities/local/root.crt` dans le conteneur).

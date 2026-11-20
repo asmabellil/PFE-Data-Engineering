@@ -1,0 +1,125 @@
+# Intégration continue JobCompass : tests + scans de sécurité à chaque push et pull request.
+# Un job en échec bloque la fusion de la PR (à activer dans Settings > Branches > protection de main).
+name: CI
+
+on:
+  push:
+    branches: [main, develop, v2, "feature/**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ------------------------------------------------------------------ Tests
+  pipeline-tests:
+    name: Pipeline - tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pipeline/pyproject.toml
+      - run: pip install -e "./pipeline[ml,dev]"
+      - run: python -m pytest -q
+        working-directory: pipeline
+
+  backend-tests:
+    name: API - tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+      # sentence-transformers (et donc PyTorch) n'est chargé qu'à l'utilisation : inutile pour les tests
+      - run: |
+          grep -v '^sentence-transformers' backend/requirements.txt > /tmp/requirements-ci.txt
+          pip install -r /tmp/requirements-ci.txt -r backend/requirements-dev.txt -e "./pipeline[ml]"
+      - run: python -m pytest -q
+        working-directory: backend
+
+  frontend-build:
+    name: Front - build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+        working-directory: frontend
+      - run: npm run build
+        working-directory: frontend
+
+  # ------------------------------------------------------------------ Sécurité
+  security:
+    name: Sécurité - secrets, SAST, dépendances, Docker
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # gitleaks analyse tout l'historique
+
+      - name: Secrets commités (gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install bandit pip-audit
+
+      - name: Analyse statique du code Python (Bandit, sévérité moyenne et plus)
+        run: bandit -r pipeline/jobinsight backend/app -ll
+
+      - name: Dépendances de l'API (pip-audit)
+        # PYSEC-2026-4164 (sentence-transformers) : exploitable seulement si un attaquant contrôle le chemin
+        # du modèle chargé. Ici, le nom du modèle vient de la configuration (EMBEDDING_MODEL), pas de
+        # l'utilisateur. Risque accepté en attendant la migration vers sentence-transformers 5.x.
+        run: pip-audit -r backend/requirements.txt --no-deps --disable-pip --ignore-vuln PYSEC-2026-4164
+
+      - name: Dépendances du pipeline (pip-audit)
+        run: |
+          python -m venv /tmp/pipeline-venv
+          /tmp/pipeline-venv/bin/pip install -q "./pipeline[pipeline,ml]"
+          /tmp/pipeline-venv/bin/pip freeze | grep -v -i '^jobinsight' > /tmp/pipeline-freeze.txt
+          pip-audit -r /tmp/pipeline-freeze.txt --no-deps --disable-pip
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Dépendances du front livrées en production (npm audit)
+        # Vite/esbuild ne servent qu'au poste de développement : ils ne sont pas dans le site livré par nginx.
+        run: npm audit --omit=dev --audit-level=high
+        working-directory: frontend
+
+      - name: Vulnérabilités et secrets dans le dépôt (Trivy)
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln,secret
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          trivyignores: .trivyignore
+          exit-code: "1"
+
+      - name: Configuration Docker / Compose (Trivy, rapport)
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: config
+          scan-ref: .
+          severity: MEDIUM,HIGH,CRITICAL
+          exit-code: "0"  # rapport seulement pour l'instant : à rendre bloquant une fois les constats traités

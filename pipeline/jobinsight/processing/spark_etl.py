@@ -22,6 +22,7 @@ from pathlib import Path
 
 from jobinsight.config import Settings, get_settings
 from jobinsight.lake import DataLake
+from jobinsight.processing.fuzzy_dedup import fuzzy_dedup
 from jobinsight.processing.quality import DIMENSION
 from jobinsight.processing.transform import FIELDS, transform_envelope
 from jobinsight.utils import get_logger, today_str
@@ -116,6 +117,10 @@ def run_etl(run_id: str, settings: Settings | None = None) -> dict:
             .join(sources, "dedup_key")
             .cache()
         )
+        n_exact = deduped.count()
+        # ---------------- Déduplication par similarité (MinHash LSH) ----------------
+        deduped, fuzzy_stats, fuzzy_examples = fuzzy_dedup(spark, deduped)
+        deduped = deduped.cache()
 
         n_valid = valid.count()
         n_dedup = deduped.count()
@@ -141,6 +146,8 @@ def run_etl(run_id: str, settings: Settings | None = None) -> dict:
             .groupBy("issue").count().collect()
         )
         per_source = df.groupBy("source", "dq_status").count().collect()
+        # fraîcheur par source (offre la plus récente) : utilisée par la porte de qualité du lot
+        newest = valid.groupBy("source").agg(F.max("publication_date").alias("newest")).collect()
         avg_completeness = deduped.agg(F.avg("completeness")).first()[0]
         report = {
             "run_id": run_id,
@@ -151,6 +158,9 @@ def run_etl(run_id: str, settings: Settings | None = None) -> dict:
             "records_valid": n_valid,
             "records_quarantine": n_quarantine,
             "duplicates_removed": n_valid - n_dedup,
+            "exact_duplicates_removed": n_valid - n_exact,
+            **fuzzy_stats,
+            "fuzzy_examples": fuzzy_examples,
             "records_processed": n_dedup,
             "uniqueness_ok": unique_ids == n_dedup and unique_keys == n_dedup,
             "avg_completeness": round(avg_completeness or 0, 3),
@@ -162,6 +172,7 @@ def run_etl(run_id: str, settings: Settings | None = None) -> dict:
             "per_source": [
                 {"source": r["source"], "status": r["dq_status"], "count": r["count"]} for r in per_source
             ],
+            "newest_by_source": {r["source"]: r["newest"] for r in newest},
             "processed_prefix": f"processed/jobs/{date}/{run_id}/",
         }
         lake.put_bytes(f"reports/quality/{run_id}.json",

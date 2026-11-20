@@ -1,0 +1,6 @@
+# Vulnérabilités acceptées, avec justification (revue à chaque mise à jour des dépendances).
+
+# sentence-transformers 3.3.1 - GHSA-jhr6-gm9c-rqjv : exploitable seulement si un attaquant contrôle le
+# chemin du modèle chargé. Le nom du modèle vient de la configuration (EMBEDDING_MODEL), jamais de
+# l'utilisateur. Correction prévue : migration vers sentence-transformers 5.x.
+CVE-2026-68770

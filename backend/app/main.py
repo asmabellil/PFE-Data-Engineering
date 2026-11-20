@@ -1,4 +1,4 @@
-"""API JobInsight (FastAPI).
+"""API JobCompass (FastAPI).
 
 Documentation interactive : http://localhost:8000/docs (OpenAPI / Swagger).
 """
@@ -14,6 +14,7 @@ from fastapi.responses import JSONResponse
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 
+from app.auth_sessions import ensure_indexes as ensure_session_indexes
 from app.config import get_settings
 from app.db import get_db
 from app.limiter import limiter
@@ -29,6 +30,7 @@ def bootstrap() -> None:
     db = get_db()
     db.users.create_index("email", unique=True)
     db.audit_logs.create_index("at")
+    ensure_session_indexes()
     if len(s.jwt_secret) < 32:
         log.warning("JWT_SECRET trop court : utilisez au moins 32 caractères aléatoires")
     if s.admin_email and s.admin_password and not db.users.find_one({"email": s.admin_email.lower()}):
@@ -48,7 +50,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="JobInsight API",
+    title="JobCompass API",
     description="Plateforme Big Data de collecte et d'analyse des offres d'emploi – PFE M2 Data Engineering",
     version="1.0.0",
     lifespan=lifespan,

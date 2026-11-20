@@ -6,8 +6,11 @@ collect_<source> (x6, en parallèle)  ->  Kafka topic jobs.raw
         -> ingest_to_datalake        Kafka -> MinIO raw/<source>/<date>/batch_<run>.jsonl
         -> spark_etl_quality         Spark : nettoyage, normalisation, enrichissement, Data Quality,
                                      déduplication -> processed/ + quarantine/ + rapport qualité
+        -> quality_gate              porte de qualité du lot : taux de quarantaine (bloquant),
+                                     chute de volume et fraîcheur par source (avertissements)
         -> load_mongodb              upsert idempotent dans MongoDB (historisation)
         -> ml_enrich_industry        prédiction du secteur manquant (modèle ML)
+        -> tag_scope                 étiquette Tech/Data sur chaque offre (filtre « Tech/Data seulement »)
         -> spark_analytics_kpis      KPIs (gold/) + exports CSV Power BI
         -> refresh_semantic_index    embeddings Deep Learning (service backend)
 ```
@@ -27,7 +30,7 @@ from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.decorators import task
-from airflow.exceptions import AirflowSkipException
+from airflow.exceptions import AirflowFailException, AirflowSkipException
 from airflow.operators.python import get_current_context
 from airflow.utils.trigger_rule import TriggerRule
 
@@ -114,6 +117,20 @@ with DAG(
             raise AirflowSkipException("pas de données raw pour ce lot")
         return stats
 
+    @task(retries=0)
+    def quality_gate():
+        """Bloque le chargement si le lot est anormal (l'entrepôt garde alors les données du run précédent)."""
+        from jobinsight.processing.quality_gate import QualityGateBlocked, run_gate
+
+        try:
+            gate = run_gate(_batch_id())
+        except QualityGateBlocked as exc:
+            _record("quality_gate", {"blocked": str(exc)}, "failed")
+            raise AirflowFailException(f"porte de qualité bloquante : {exc}") from exc
+        status = "partial" if gate["status"] == "warning" else "success"
+        _record("quality_gate", {"status": gate["status"], "checks": gate["checks"]}, status)
+        return {"status": gate["status"], "warnings": sum(c["level"] == "warning" for c in gate["checks"])}
+
     @task
     def load_mongodb():
         from jobinsight.warehouse.mongo_loader import load_run
@@ -129,6 +146,15 @@ with DAG(
 
         stats = predict_missing(get_db())
         _record("ml_enrich_industry", stats)
+        return stats
+
+    @task
+    def tag_scope():
+        from jobinsight.processing.scope import tag_scope as run_tag_scope
+        from jobinsight.warehouse.mongo_loader import get_db
+
+        stats = run_tag_scope(get_db())
+        _record("tag_scope", stats)
         return stats
 
     @task
@@ -156,4 +182,4 @@ with DAG(
 
     ingest = ingest_to_datalake()
     collect_tasks >> ingest
-    ingest >> spark_etl_quality() >> load_mongodb() >> ml_enrich_industry() >> spark_analytics_kpis() >> refresh_semantic_index()
+    ingest >> spark_etl_quality() >> quality_gate() >> load_mongodb() >> ml_enrich_industry() >> tag_scope() >> spark_analytics_kpis() >> refresh_semantic_index()

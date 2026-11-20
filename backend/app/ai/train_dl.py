@@ -115,8 +115,10 @@ def train(epochs: int = 60, patience: int = 8, seed: int = 42) -> dict:
 
     path = Path(get_settings().models_dir) / MODEL_FILE
     path.parent.mkdir(parents=True, exist_ok=True)
-    torch.save({"state_dict": model.state_dict(), "classes": classes, "dim": X.shape[1],
-                "metrics": metrics}, path)
+    # uniquement des types simples (tenseurs, str, int) : rechargeable avec weights_only=True.
+    # Les métriques sont conservées dans MongoDB (ml_runs), pas dans le fichier du modèle.
+    torch.save({"state_dict": model.state_dict(), "classes": [str(c) for c in classes],
+                "dim": int(X.shape[1])}, path)
     db.ml_runs.insert_one({"model": "category_mlp_dl", "metrics": metrics, "history": history,
                            "created_at": datetime.now(timezone.utc)})
     return {"status": "success", **metrics}
@@ -133,7 +135,8 @@ def load_mlp():
         return None
     mtime = path.stat().st_mtime
     if _cache.get("mtime") != mtime:
-        ckpt = torch.load(path, map_location="cpu", weights_only=False)
+        # weights_only=True : refuse tout objet Python arbitraire (pas d'exécution de code via pickle)
+        ckpt = torch.load(path, map_location="cpu", weights_only=True)
         model = build_mlp(ckpt["dim"], len(ckpt["classes"]))
         model.load_state_dict(ckpt["state_dict"])
         model.eval()

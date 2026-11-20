@@ -31,7 +31,8 @@ FIELDS: list[tuple[str, str]] = [
 
 
 def _sha1(*parts: str) -> str:
-    return hashlib.sha1("|".join(parts).encode("utf-8")).hexdigest()
+    # identifiant technique (déduplication), pas un usage cryptographique
+    return hashlib.sha1("|".join(parts).encode("utf-8"), usedforsecurity=False).hexdigest()
 
 
 def make_dedup_key(title: str | None, company: str | None, city: str | None, country: str | None) -> str:

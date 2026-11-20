@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { api, getToken, setToken } from "./api";
+import { api, refreshSession, setToken } from "./api";
 
 const AuthCtx = createContext(null);
 const FilterCtx = createContext(null);
@@ -8,9 +8,9 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [ready, setReady] = useState(false);
 
+  // au chargement de la page : le cookie httpOnly permet de reprendre la session sans ressaisir le mot de passe
   useEffect(() => {
-    if (!getToken()) return setReady(true);
-    api("/auth/me").then(setUser).catch(() => setToken(null)).finally(() => setReady(true));
+    refreshSession().then((data) => data && setUser(data.user)).finally(() => setReady(true));
   }, []);
 
   const login = async (email, password, register = false, full_name = "") => {
@@ -21,13 +21,19 @@ export function AuthProvider({ children }) {
     setToken(data.access_token);
     setUser(data.user);
   };
-  const logout = () => { setToken(null); setUser(null); };
+  // la session est révoquée côté serveur (refresh token), pas seulement oubliée par le navigateur
+  const logout = async () => {
+    try { await api("/auth/logout", { method: "POST" }); } catch { /* déjà expirée : rien à faire */ }
+    setToken(null);
+    setUser(null);
+  };
   return <AuthCtx.Provider value={{ user, ready, login, logout }}>{children}</AuthCtx.Provider>;
 }
 
-// filtres globaux (barre du haut) appliqués à tout le tableau de bord
+// filtres globaux (barre du haut) appliqués à tout le tableau de bord.
+// scope "tech" par défaut : seules les offres Tech/Data sont comptées (les autres restent en base).
 export function FilterProvider({ children }) {
-  const [filters, setFilters] = useState({ country: "", days: "" });
+  const [filters, setFilters] = useState({ country: "", days: "", scope: "tech" });
   return <FilterCtx.Provider value={{ filters, setFilters }}>{children}</FilterCtx.Provider>;
 }
 

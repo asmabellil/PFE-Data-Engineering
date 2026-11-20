@@ -1,7 +1,7 @@
 """Étape 2 – génère le rapport final (PDF + Word) à partir de rapport.md et des chiffres réels.
 
     python deliverables/collect_stats.py     # chiffres + graphiques (plateforme lancée)
-    python deliverables/build_report.py      # -> deliverables/Rapport_PFE_JobInsight.pdf / .docx
+    python deliverables/build_report.py      # -> deliverables/Rapport_PFE_JobCompass.pdf / .docx
 """
 import html
 import json
@@ -109,7 +109,7 @@ def fill(md: str) -> str:
 CSS = """
 @page { size: A4; margin: 2.2cm 2cm 2.2cm 2cm;
   @bottom-right { content: counter(page); font: 9pt 'Segoe UI', sans-serif; color: #7a8599; }
-  @bottom-left { content: "JobInsight – Rapport de PFE"; font: 9pt 'Segoe UI', sans-serif; color: #7a8599; } }
+  @bottom-left { content: "JobCompass – Rapport de PFE"; font: 9pt 'Segoe UI', sans-serif; color: #7a8599; } }
 @page :first { @bottom-right { content: none; } @bottom-left { content: none; } }
 body { font-family: 'Segoe UI', Calibri, Arial, sans-serif; font-size: 10.5pt; line-height: 1.5; color: #172033; }
 h1 { font-size: 21pt; color: #1d4ed8; border-bottom: 2px solid #2563eb; padding-bottom: 4px; page-break-before: always; margin-top: 0; }
@@ -144,11 +144,11 @@ def build_pdf(md_text: str) -> pathlib.Path:
     body = markdown.markdown(md_text.replace("[[TOC]]", "[TOC]"),
                              extensions=["tables", "fenced_code", "toc", "md_in_html", "sane_lists"],
                              extension_configs={"toc": {"toc_depth": "1-2", "title": ""}})
-    page = (f"<!doctype html><html lang='fr'><head><meta charset='utf-8'><title>Rapport PFE JobInsight</title>"
+    page = (f"<!doctype html><html lang='fr'><head><meta charset='utf-8'><title>Rapport PFE JobCompass</title>"
             f"<style>{CSS}</style></head><body>{body}</body></html>")
     html_path = BUILD / "rapport.html"
     html_path.write_text(page, encoding="utf-8")
-    pdf = HERE / "Rapport_PFE_JobInsight.pdf"
+    pdf = HERE / "Rapport_PFE_JobCompass.pdf"
     browser = next(p for p in EDGE_CANDIDATES if pathlib.Path(p).exists())
     # Profil navigateur jetable, HORS du dépôt : il contient cookies/historique/sessions et ne doit
     # jamais être versionné. Il est supprimé automatiquement après la génération du PDF.
@@ -286,7 +286,7 @@ def build_docx(md_text: str) -> pathlib.Path:
             p = doc.add_paragraph(); add_inline(p, line.strip())
             p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
         i += 1
-    out = HERE / "Rapport_PFE_JobInsight.docx"
+    out = HERE / "Rapport_PFE_JobCompass.docx"
     doc.save(out)
     return out
 

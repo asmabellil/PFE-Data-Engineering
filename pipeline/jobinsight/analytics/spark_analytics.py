@@ -89,7 +89,7 @@ def run_analytics(run_id: str, settings: Settings | None = None) -> dict:
             "top_technologies": q("""SELECT t.technology, d.tech_category, COUNT(DISTINCT t.dedup_key) AS jobs,
                                      ROUND(100 * COUNT(DISTINCT t.dedup_key) / {n}, 2) AS pct_jobs
                                      FROM job_tech t LEFT JOIN dim_tech d USING (technology)
-                                     GROUP BY 1, 2 ORDER BY jobs DESC""".format(n=n_jobs)),
+                                     GROUP BY 1, 2 ORDER BY jobs DESC""", n=n_jobs),  # paramètre Spark, pas de .format
             "top_skills": q("""SELECT s.skill, d.skill_category, COUNT(DISTINCT s.dedup_key) AS jobs
                                FROM job_skill s LEFT JOIN dim_skill d USING (skill)
                                GROUP BY 1, 2 ORDER BY jobs DESC"""),

@@ -11,7 +11,11 @@ class Settings(BaseSettings):
 
     jwt_secret: str = "dev-only-secret-change-me-please-0123456789"
     jwt_algorithm: str = "HS256"
-    jwt_expire_minutes: int = 120
+    jwt_expire_minutes: int = 15          # jeton d'accès court ; la session est prolongée par le refresh token
+    refresh_expire_days: int = 7          # durée de vie d'un refresh token (cookie httpOnly)
+    cookie_secure: bool = False           # True derrière HTTPS (cookie envoyé uniquement en HTTPS)
+    max_failed_logins: int = 5            # échecs avant verrouillage
+    lockout_minutes: int = 15             # durée du verrouillage (et fenêtre de comptage des échecs)
 
     admin_email: str | None = None
     admin_password: str | None = None

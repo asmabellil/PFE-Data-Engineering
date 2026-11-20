@@ -22,14 +22,15 @@ BLOCKING = {
     "INVALID_URL", "INVALID_DATE", "FUTURE_DATE",
 }
 WARNINGS = {"MISSING_DESCRIPTION", "MISSING_LOCATION", "STALE_OFFER", "COUNTRY_MISMATCH",
-            "SHORT_DESCRIPTION"}
+            "SHORT_DESCRIPTION", "SALARY_UNUSABLE"}
 
 DIMENSION = {
     "MISSING_TITLE": "Complétude", "MISSING_COMPANY": "Complétude", "MISSING_URL": "Complétude",
     "MISSING_DESCRIPTION": "Complétude", "MISSING_LOCATION": "Complétude",
     "SHORT_DESCRIPTION": "Complétude",
     "SALARY_MIN_GT_MAX": "Validité", "INVALID_URL": "Validité", "INVALID_DATE": "Validité",
-    "FUTURE_DATE": "Validité", "STALE_OFFER": "Fraîcheur", "COUNTRY_MISMATCH": "Cohérence",
+    "FUTURE_DATE": "Validité", "SALARY_UNUSABLE": "Validité",
+    "STALE_OFFER": "Fraîcheur", "COUNTRY_MISMATCH": "Cohérence",
     "DUPLICATE": "Unicité",
 }
 
@@ -59,6 +60,10 @@ def check_record(rec: dict, today: date | None = None, country_from_hint: str | 
     smin, smax = rec.get("salary_min"), rec.get("salary_max")
     if smin is not None and smax is not None and smin > smax:
         issues.append("SALARY_MIN_GT_MAX")
+    # salaire publié mais non exploitable (montant hors bornes une fois annualisé, ou devise inconnue) :
+    # il est exclu des analyses, on le signale au lieu de le perdre en silence
+    if smin is not None and "salary_annual_min_eur" in rec and rec["salary_annual_min_eur"] is None:
+        issues.append("SALARY_UNUSABLE")
 
     pub = rec.get("publication_date")
     if pub:
