@@ -1,21 +1,55 @@
-# Dependabot : propose chaque semaine une PR quand une dépendance a une mise à jour (de sécurité ou non).
+# Dependabot : vérifie chaque semaine les mises à jour des dépendances.
+# Les versions mineures et correctives sont regroupées en une seule PR par écosystème.
+# Les versions majeures sont ignorées : chacune demande une vraie migration, à planifier à part.
 version: 2
 updates:
   - package-ecosystem: pip
     directory: /backend
     schedule: {interval: weekly}
-    open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+      # FastAPI est en 0.x : chaque version mineure peut casser l'API
+      - dependency-name: fastapi
+        update-types: ["version-update:semver-minor"]
+    groups:
+      backend-mineures:
+        update-types: [minor, patch]
   - package-ecosystem: pip
     directory: /pipeline
     schedule: {interval: weekly}
-    open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      pipeline-mineures:
+        update-types: [minor, patch]
   - package-ecosystem: npm
     directory: /frontend
     schedule: {interval: weekly}
-    open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      frontend-mineures:
+        update-types: [minor, patch]
   - package-ecosystem: docker
     directories: [/airflow, /backend, /frontend]
     schedule: {interval: weekly}
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+      # Une nouvelle version mineure de Python ou de Node change l'environnement d'exécution
+      - dependency-name: python
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: node
+        update-types: ["version-update:semver-minor"]
+    groups:
+      images-docker:
+        update-types: [minor, patch]
   - package-ecosystem: github-actions
     directory: /
     schedule: {interval: weekly}
+    groups:
+      actions:
+        patterns: ["*"]
