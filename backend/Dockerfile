@@ -1,5 +1,5 @@
 # API FastAPI JobCompass (contexte de build = racine du projet)
-FROM python:3.11-slim
+FROM python:3.15-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
