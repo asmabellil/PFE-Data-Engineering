@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: "20"
           cache: npm
@@ -97,7 +97,7 @@ jobs:
           /tmp/pipeline-venv/bin/pip freeze | grep -v -i '^jobinsight' > /tmp/pipeline-freeze.txt
           pip-audit -r /tmp/pipeline-freeze.txt --no-deps --disable-pip
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: "20"
       - name: Dépendances du front livrées en production (npm audit)
