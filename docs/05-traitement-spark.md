@@ -1,6 +1,6 @@
 # 05 – Traitement : Apache Spark (nettoyage, transformation, enrichissement)
 
-**Outils** : Apache Spark 3.5.3 (**PySpark**), Java 17, Spark SQL, window functions
+**Outils** : Apache Spark 3.5.8 (**PySpark**), Java 17, Spark SQL, window functions
 **Code** : `pipeline/jobinsight/processing/` (`spark_etl.py` + fonctions pures testées)
 
 ## Déroulé du job `spark_etl`
