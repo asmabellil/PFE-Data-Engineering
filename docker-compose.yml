@@ -198,6 +198,9 @@ services:
     volumes:
       - ./models:/opt/models
       - hf_cache:/opt/hf_cache
+      # code de l'API monté en lecture seule (comme le pipeline dans Airflow) : une modification
+      # du code demande un simple redémarrage du conteneur, sans reconstruire l'image
+      - ./backend/app:/app/app:ro
     ports: ["127.0.0.1:8000:8000"]
     networks: [backend-net, frontend-net]
     restart: unless-stopped

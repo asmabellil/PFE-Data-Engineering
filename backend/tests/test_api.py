@@ -209,3 +209,58 @@ def test_scope_filter_hides_out_of_scope_offers(client):
     assert client.get("/api/jobs", params={"scope": "tech"}, headers=h).json()["total"] == 2
     assert client.get("/api/jobs", params={"scope": "all"}, headers=h).json()["total"] == 3
     assert client.get("/api/jobs", params={"scope": "nimporte"}, headers=h).status_code == 422
+
+
+def test_lifecycle_status_filter(client):
+    db = db_module.get_db()
+    db.jobs.update_one({"dedup_key": "a" * 40}, {"$set": {"lifecycle": {"status": "active", "age_days": 3}}})
+    db.jobs.update_one({"dedup_key": "b" * 40}, {"$set": {"lifecycle": {"status": "expired", "age_days": 30}}})
+    h = auth_headers(client)
+    active = client.get("/api/jobs", params={"status": "active"}, headers=h).json()
+    assert active["total"] == 1 and active["items"][0]["lifecycle"] == {"status": "active", "age_days": 3}
+    assert client.get("/api/jobs", params={"status": "expired"}, headers=h).json()["total"] == 1
+    assert client.get("/api/jobs", params={"status": "pourvue"}, headers=h).status_code == 422
+
+
+def test_lifecycle_endpoint_returns_latest_snapshot_and_trend(client):
+    db = db_module.get_db()
+    now = datetime.now(timezone.utc)
+    for i, active in enumerate((100, 120)):
+        db.lifecycle_snapshots.insert_one({
+            "run_id": f"run{i}", "created_at": now - timedelta(hours=6 * (1 - i)), "total": 150,
+            "by_status": {"active": active, "out_of_window": 150 - active}, "new_last_24h": 10 * i,
+            "expired_last_24h": 0, "active_median_age_days": 2, "active_age_by": {"city": []}})
+    h = auth_headers(client)
+    body = client.get("/api/admin/lifecycle", headers=h).json()
+    assert body["latest"]["run_id"] == "run1" and "active_age_by" in body["latest"]
+    assert [s["run_id"] for s in body["history"]] == ["run0", "run1"]       # ordre chronologique
+    assert "active_age_by" not in body["history"][0]                         # tendance allégée
+
+
+def test_contract_rejections_aggregates_runs_and_reasons(client):
+    db = db_module.get_db()
+    db.pipeline_runs.insert_many([
+        {"run_id": "ancien", "started_at": datetime(2026, 11, 17, tzinfo=timezone.utc),
+         "tasks": {"collect_wttj": {"status": "success", "stats": {"collected": 100}}}},   # avant le contrat
+        {"run_id": "r1", "started_at": datetime(2026, 11, 20, tzinfo=timezone.utc), "tasks": {
+            "collect_wttj": {"status": "success", "stats": {
+                "collected": 100, "published": 98, "rejected": 2, "reject_rate": 0.02,
+                "reject_reasons": {"payload.title_missing": 2}}},
+            "collect_adzuna": {"status": "skipped", "stats": {"collected": 0}},
+            "ingest_to_datalake": {"status": "success", "stats": {"dlq": {"records": 2}}}}},
+    ])
+    h = auth_headers(client)
+    body = client.get("/api/admin/contract-rejections", headers=h).json()
+    assert [r["run_id"] for r in body["runs"]] == ["r1"]
+    assert body["runs"][0]["sources"] == {"wttj": {"collected": 100, "published": 98, "rejected": 2,
+                                                   "reject_rate": 0.02}}
+    assert body["runs"][0]["dlq_records"] == 2
+    assert (body["collected"], body["rejected"], body["reject_rate"]) == (100, 2, 0.02)
+    assert body["top_reasons"] == {"payload.title_missing": 2}
+
+
+def test_monitoring_endpoints_require_analyst_role(client):
+    client.post("/api/auth/register", json={"email": "v@test.io", "password": "abcdefg1", "full_name": "V"})
+    h = auth_headers(client, {"email": "v@test.io", "password": "abcdefg1"})
+    assert client.get("/api/admin/lifecycle", headers=h).status_code == 403
+    assert client.get("/api/admin/contract-rejections", headers=h).status_code == 403

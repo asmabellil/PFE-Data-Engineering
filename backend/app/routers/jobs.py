@@ -11,7 +11,7 @@ LIST_FIELDS = {
     "remote": 1, "contract_type": 1, "experience_level": 1, "industry": 1, "industry_source": 1,
     "technologies": 1, "salary_annual_min_eur": 1, "salary_annual_max_eur": 1, "salary_min": 1,
     "salary_max": 1, "currency": 1, "salary_period": 1, "publication_date": 1, "source": 1,
-    "sources": 1, "url": 1, "first_seen_at": 1,
+    "sources": 1, "url": 1, "first_seen_at": 1, "lifecycle.status": 1, "lifecycle.age_days": 1,
 }
 SORTS = {"recent": [("publication_date", -1)], "salary": [("salary_annual_max_eur", -1)],
          "company": [("company", 1)]}

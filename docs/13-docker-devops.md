@@ -18,6 +18,8 @@
 Volumes nommés pour la persistance (`mongo_data`, `minio_data`, `kafka_data`, `postgres_data`,
 `hf_cache` pour le modèle Transformer) ; dossiers montés : `pipeline/` (code), `airflow/dags/`,
 `exports/` (Power BI), `models/` (modèles partagés Airflow ↔ API).
+Le code de l'API (`backend/app/`) est monté **en lecture seule** : une modification demande un
+simple `docker compose restart backend`, sans reconstruire l'image (qui contient PyTorch).
 
 **Healthchecks** sur Postgres, Kafka, MinIO, MongoDB et l'API ; Airflow attend que ses
 dépendances soient *healthy* (`depends_on: condition: service_healthy`). Mémoire maîtrisée
