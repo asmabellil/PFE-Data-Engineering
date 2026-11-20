@@ -1,5 +1,5 @@
 # Image Airflow + Spark (PySpark local) + code du pipeline JobCompass
-FROM apache/airflow:2.10.4-python3.11
+FROM apache/airflow:2.11.2-python3.11
 
 USER root
 # Java est requis par Apache Spark
