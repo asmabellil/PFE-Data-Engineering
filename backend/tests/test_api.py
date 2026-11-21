@@ -265,3 +265,55 @@ def test_monitoring_endpoints_require_analyst_role(client):
     h = auth_headers(client, {"email": "v@test.io", "password": "abcdefg1"})
     assert client.get("/api/admin/lifecycle", headers=h).status_code == 403
     assert client.get("/api/admin/contract-rejections", headers=h).status_code == 403
+
+
+def test_job_lineage_tells_the_journey_of_an_offer(client):
+    db = db_module.get_db()
+    run = "20261120T174842"
+    raw = f"raw/remotive/2026-11-20/batch_{run}.jsonl"
+    db.jobs.update_one({"dedup_key": "a" * 40}, {"$set": {
+        "source": "remotive", "source_id": "42", "run_id": run, "completeness": 0.9, "dq_issues": [],
+        "seen_count": 3, "lifecycle": {"status": "active", "age_days": 10},
+        "lineage": {"run_id": run, "raw_key": raw, "processed_key": f"processed/jobs/2026-11-20/{run}/p.parquet",
+                    "quality_report_key": f"reports/quality/{run}.json", "exact_duplicates_merged": 1,
+                    "fuzzy_merged_keys": ["c" * 40]},
+        "lineage_history": [{"run_id": run, "raw_key": raw}]}})
+    db.pipeline_runs.insert_one({"run_id": run, "tasks": {
+        "collect_remotive": {"status": "success", "stats": {"collected": 16, "published": 16, "rejected": 0}},
+        "spark_etl_quality": {"status": "success"}, "quality_gate": {"status": "success"},
+        "load_mongodb": {"status": "success"}}})
+    db.quality_reports.insert_one({"run_id": run, "records_total": 6302, "records_quarantine": 0})
+
+    body = client.get(f"/api/jobs/{'a' * 40}/lineage", headers=auth_headers(client)).json()
+    steps = {s["step"]: s for s in body["steps"]}
+    assert list(steps) == ["collecte", "contrat_de_donnees", "kafka", "zone_raw", "spark_etl_qualite",
+                           "deduplication", "quality_gate", "zone_processed", "mongodb", "cycle_de_vie"]
+    assert body["lineage_complet"] is True and body["history"] == [{"run_id": run, "raw_key": raw}]
+    assert steps["kafka"]["detail"]["cle"] == "remotive:42"
+    assert steps["zone_raw"]["detail"] == {"raw_key": raw, "chemin_reconstruit": False}
+    assert steps["contrat_de_donnees"]["detail"] == {"publiees": 16, "rejetees": 0}
+    assert steps["deduplication"]["detail"]["doublons_similaires_absorbes"] == ["c" * 40]
+    assert steps["spark_etl_qualite"]["detail"]["offres_du_lot"] == 6302
+    assert steps["cycle_de_vie"]["status"] == "active"
+
+
+def test_job_lineage_rebuilds_the_raw_path_for_offers_loaded_before_lineage(client):
+    db = db_module.get_db()
+    db.jobs.update_one({"dedup_key": "b" * 40},
+                       {"$set": {"source": "arbeitnow", "source_id": "x", "run_id": "20261117T120000"}})
+    body = client.get(f"/api/jobs/{'b' * 40}/lineage", headers=auth_headers(client)).json()
+    raw = next(s for s in body["steps"] if s["step"] == "zone_raw")["detail"]
+    assert raw == {"raw_key": "raw/arbeitnow/2026-11-17/batch_20261117T120000.jsonl", "chemin_reconstruit": True}
+    assert body["lineage_complet"] is False
+    contract = next(s for s in body["steps"] if s["step"] == "contrat_de_donnees")
+    assert contract["status"] == "non_applicable"      # run antérieur au contrat de données
+
+
+def test_job_lineage_access_and_validation(client):
+    h = auth_headers(client)
+    assert client.get("/api/jobs/" + "z" * 40 + "/lineage", headers=h).status_code == 404
+    assert client.get("/api/jobs/court/lineage", headers=h).status_code == 422
+    r = client.post("/api/auth/register", json={"email": "w@test.io", "password": "abcdefg1", "full_name": "Viewer"})
+    assert r.status_code == 201
+    viewer = auth_headers(client, {"email": "w@test.io", "password": "abcdefg1"})
+    assert client.get(f"/api/jobs/{'a' * 40}/lineage", headers=viewer).status_code == 403

@@ -73,6 +73,11 @@ def safe_transform(line: str) -> tuple:
     return tuple(rec[name] for name, _ in FIELDS)
 
 
+def raw_key_by_source(keys: list[str]) -> dict[str, str]:
+    """Lignage : fichier Raw réellement lu pour chaque source (raw/<source>/<date>/batch_<run>.jsonl)."""
+    return {key.split("/")[1]: key for key in keys if key.startswith("raw/") and key.count("/") >= 3}
+
+
 def run_etl(run_id: str, settings: Settings | None = None) -> dict:
     from pyspark.sql import Window
     from pyspark.sql import functions as F
@@ -97,7 +102,10 @@ def run_etl(run_id: str, settings: Settings | None = None) -> dict:
 
         spark = get_spark()
         lines = spark.sparkContext.textFile(",".join(local_files)).filter(lambda l: l.strip() != "")
-        df = spark.createDataFrame(lines.map(safe_transform), schema=spark_schema()).cache()
+        # lignage : chaque offre porte le chemin exact de son fichier Raw dans le Data Lake
+        raw_map = F.create_map(*[F.lit(x) for pair in raw_key_by_source(keys).items() for x in pair])
+        df = (spark.createDataFrame(lines.map(safe_transform), schema=spark_schema())
+              .withColumn("raw_key", raw_map[F.col("source")]).cache())
 
         total = df.count()
         valid = df.filter(F.col("dq_status") == "valid")

@@ -54,6 +54,39 @@ def _clean_value(v):
     return v
 
 
+LINEAGE_HISTORY = 20  # nombre de runs gardés dans l'historique de lignage de chaque offre
+
+
+def build_update(row: dict, run_id: str, processed_key: str, now: datetime) -> tuple[dict, dict]:
+    """Upsert d'une offre Processed : données, historisation et lignage (d'où vient cette version)."""
+    doc = {k: _clean_value(v) for k, v in row.items()}
+    sources = doc.pop("sources", None) or [doc.get("source")]
+    duplicate_count = doc.pop("duplicate_count", None) or 1
+    fuzzy_merged = doc.pop("fuzzy_merged_keys", None) or []
+    raw_key = doc.pop("raw_key", None)
+    doc.pop("dq_status", None)
+    doc["updated_at"] = now
+    doc["lineage"] = {
+        "run_id": run_id,
+        "raw_key": raw_key,                                   # fichier Raw lu par Spark (zone Raw)
+        "processed_key": processed_key,                       # fichier Parquet chargé (zone Processed)
+        "quality_report_key": f"reports/quality/{run_id}.json",
+        "exact_duplicates_merged": max(duplicate_count - 1, 0),  # même dedup_key dans le lot
+        "fuzzy_merged_keys": fuzzy_merged,                    # absorbées par similarité (MinHash LSH)
+    }
+    update = {
+        "$set": doc,
+        "$setOnInsert": {"first_seen_at": now},
+        "$max": {"last_seen_at": now},
+        "$inc": {"seen_count": 1},
+        "$addToSet": {"sources": {"$each": sources}},
+        # historique borné : les derniers runs qui ont vu l'offre, avec leur fichier Raw
+        "$push": {"lineage_history": {"$each": [{"run_id": run_id, "raw_key": raw_key, "at": now}],
+                                      "$slice": -LINEAGE_HISTORY}},
+    }
+    return {"dedup_key": doc["dedup_key"]}, update
+
+
 def load_run(run_id: str, settings: Settings | None = None) -> dict:
     settings = settings or get_settings()
     lake = DataLake(settings)
@@ -69,24 +102,8 @@ def load_run(run_id: str, settings: Settings | None = None) -> dict:
     for key in keys:
         table = pq.read_table(io.BytesIO(lake.get_bytes(key)))
         for row in table.to_pylist():
-            doc = {k: _clean_value(v) for k, v in row.items()}
-            sources = doc.pop("sources", None) or [doc.get("source")]
-            doc.pop("duplicate_count", None)
-            doc.pop("dq_status", None)
-            doc["updated_at"] = now
-            ops.append(
-                UpdateOne(
-                    {"dedup_key": doc["dedup_key"]},
-                    {
-                        "$set": doc,
-                        "$setOnInsert": {"first_seen_at": now},
-                        "$max": {"last_seen_at": now},
-                        "$inc": {"seen_count": 1},
-                        "$addToSet": {"sources": {"$each": sources}},
-                    },
-                    upsert=True,
-                )
-            )
+            filt, update = build_update(row, run_id, key, now)
+            ops.append(UpdateOne(filt, update, upsert=True))
 
     inserted = updated = 0
     for i in range(0, len(ops), 1000):

@@ -126,8 +126,8 @@ def fuzzy_dedup(spark, df):
         .collect()
     )
     stats = {"fuzzy_candidates": len(candidates), "fuzzy_confirmed_pairs": 0, "fuzzy_duplicates_removed": 0}
-    if not candidates:
-        return df, stats, []
+    if not candidates:  # colonne toujours présente pour le lignage, même sans fusion
+        return df.withColumn("fuzzy_merged_keys", F.lit(None).cast("array<string>")), stats, []
 
     keys = sorted({c["a"] for c in candidates} | {c["b"] for c in candidates})
     cols = ["dedup_key", "title", "company", "city", "publication_date", "description", "completeness",
@@ -138,18 +138,21 @@ def fuzzy_dedup(spark, df):
 
     drop: set[str] = set()
     merged: dict[str, list[str]] = {}
+    absorbed: dict[str, list[str]] = {}  # lignage : offres absorbées par l'offre gardée
     examples = []
     for members in groups.values():
         best = max(members, key=lambda k: (info[k]["completeness"] or 0, info[k]["collected_at"] or ""))
         merged[best] = sorted({s for k in members for s in (info[k]["sources"] or [])})
-        drop.update(m for m in members if m != best)
+        absorbed[best] = sorted(m for m in members if m != best)
+        drop.update(absorbed[best])
         if len(examples) < 10:
             examples.append({"kept": info[best]["title"], "company": info[best]["company"],
                              "merged": [info[m]["title"] for m in members if m != best], "sources": merged[best]})
     stats.update(fuzzy_confirmed_pairs=len(confirmed), fuzzy_duplicates_removed=len(drop))
 
     out = df.filter(~F.col("dedup_key").isin(sorted(drop)))
-    patch = spark.createDataFrame(list(merged.items()), "dedup_key string, merged_sources array<string>")
+    patch = spark.createDataFrame([(k, merged[k], absorbed[k]) for k in merged],
+                                  "dedup_key string, merged_sources array<string>, fuzzy_merged_keys array<string>")
     out = (out.join(patch, "dedup_key", "left")
            .withColumn("sources", F.coalesce(F.col("merged_sources"), F.col("sources"))).drop("merged_sources"))
     return out, stats, examples

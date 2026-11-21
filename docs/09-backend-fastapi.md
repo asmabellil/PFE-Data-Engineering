@@ -23,6 +23,7 @@ backend/app/
 | GET | `/api/auth/me` | viewer | profil courant |
 | GET | `/api/jobs` | viewer | liste paginée + filtres (q, pays, contrat, niveau, secteur, techno, source, remote, période, salaire, cycle de vie `status=active\|expired\|out_of_window`) + tri. Le filtre `status` vaut aussi pour les routes `/api/analytics/*` sauf `/kpi-history` (KPIs sur les offres encore en ligne) |
 | GET | `/api/jobs/filters` · `/api/jobs/{dedup_key}` | viewer | valeurs de filtres · détail |
+| GET | `/api/jobs/{dedup_key}/lineage` | analyst | lignage : parcours de l'offre en 10 étapes, de la source au cycle de vie |
 | GET | `/api/analytics/overview` | viewer | KPIs (`$facet`) + tendance 30 j |
 | GET | `/api/analytics/timeline?granularity=day\|week\|month` | viewer | évolution des offres |
 | GET | `/api/analytics/top-technologies` · `/top-skills` | viewer | classements |

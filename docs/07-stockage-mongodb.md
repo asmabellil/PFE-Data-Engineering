@@ -27,6 +27,33 @@ UpdateOne({"dedup_key": key}, {
 ```
 Envoyé par paquets de 1 000 (`bulk_write`, `ordered=False`).
 
+## Lignage des données
+**Code** : `processing/spark_etl.py` (`raw_key`), `processing/fuzzy_dedup.py` (`fuzzy_merged_keys`),
+`warehouse/mongo_loader.py` (`build_update`) · **API** : `GET /api/jobs/{dedup_key}/lineage` (analyst)
+· **Tests** : `pipeline/tests/test_lineage.py`, `test_fuzzy_dedup.py`, `backend/tests/test_api.py`
+
+Chaque offre garde la trace de son parcours. Spark lit les fichiers Raw comme des lignes de texte et
+perd leur nom : la colonne `raw_key` est donc ajoutée à partir de la liste des fichiers réellement
+lus. La déduplication par similarité note les offres absorbées par l'offre gardée. Au chargement,
+ces informations forment le bloc `lineage` :
+
+| Champ | Contenu |
+|---|---|
+| `run_id` | lot qui a produit cette version de l'offre |
+| `raw_key` | fichier de la zone Raw lu par Spark |
+| `processed_key` | fichier Parquet de la zone Processed chargé dans MongoDB |
+| `quality_report_key` | rapport qualité du lot |
+| `exact_duplicates_merged` | doublons exacts (même `dedup_key`) fusionnés dans le lot |
+| `fuzzy_merged_keys` | offres absorbées par similarité (MinHash LSH) |
+
+`lineage_history` garde les 20 derniers runs qui ont vu l'offre, avec leur fichier Raw.
+
+La route `/api/jobs/{dedup_key}/lineage` assemble ce bloc avec `pipeline_runs` et
+`quality_reports` pour raconter le parcours en 10 étapes : collecte, contrat de données, Kafka,
+zone Raw, Spark et qualité, déduplication, porte de qualité, zone Processed, MongoDB, cycle de vie.
+Pour une offre chargée avant le lignage, le chemin Raw est reconstruit selon la convention de
+nommage et signalé (`chemin_reconstruit: true`).
+
 ## Cycle de vie des offres
 **Code** : `pipeline/jobinsight/warehouse/lifecycle.py` · **Tâche Airflow** : `update_lifecycle`
 (branche parallèle après `tag_scope`, un échec ne bloque pas les KPIs) · **Tests** : `pipeline/tests/test_lifecycle.py`

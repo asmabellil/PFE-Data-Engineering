@@ -82,3 +82,21 @@ def test_fuzzy_dedup_in_spark():
     assert set(kept) == {"k1", "k3", "k4"}                # k2 fusionnée dans k1, le stage reste à part
     assert kept["k1"] == ["adzuna", "france_travail"]     # sources fusionnées
     assert stats["fuzzy_duplicates_removed"] == 1 and examples[0]["kept"] == "Data Engineer H/F"
+    # lignage : l'offre gardée garde la trace de celle qu'elle a absorbée, les autres n'ont rien
+    merged = {r["dedup_key"]: r["fuzzy_merged_keys"] for r in out.collect()}
+    assert merged == {"k1": ["k2"], "k3": None, "k4": None}
+
+
+def test_fuzzy_dedup_without_candidates_still_has_the_lineage_column():
+    pytest.importorskip("pyspark")
+    from pyspark.sql import SparkSession
+
+    from jobinsight.processing.fuzzy_dedup import fuzzy_dedup
+
+    spark = SparkSession.builder.master("local[1]").appName("test-fuzzy").getOrCreate()
+    schema = ("dedup_key string, title string, company string, city string, publication_date string, "
+              "description string, completeness double, collected_at string, sources array<string>")
+    rows = [("k1", "Data Engineer", "Acme", "Paris", "2026-11-10", None, 0.9, "2026-11-10", ["wttj"])]
+    out, stats, _ = fuzzy_dedup(spark, spark.createDataFrame(rows, schema))
+    assert stats["fuzzy_duplicates_removed"] == 0
+    assert "fuzzy_merged_keys" in out.columns
