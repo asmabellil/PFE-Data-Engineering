@@ -51,7 +51,11 @@ class InsufficientSalaryData(ValueError):
 
 
 def _key(value) -> str | None:
-    return None if value in (None, "", "None", "nan") else str(value)
+    # valeur manquante : None, NaN de pandas (selon la version de pandas, une colonne avec des trous
+    # contient l'un ou l'autre) ou chaîne vide. NaN != NaN, d'où le test isinstance + isnan.
+    if value is None or (isinstance(value, float) and np.isnan(value)) or str(value) in ("", "None", "nan"):
+        return None
+    return str(value)
 
 
 def coverage_table(df: pd.DataFrame) -> dict:

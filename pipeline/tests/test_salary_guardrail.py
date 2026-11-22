@@ -23,6 +23,16 @@ def test_coverage_table_counts_countries_levels_and_cells():
     assert not any("?" in k for k in COV["cell"])                    # pas de couple incomplet
 
 
+def test_missing_values_as_nan_are_not_counted_as_a_country():
+    # selon la version de pandas, les trous d'une colonne sont None ou NaN : jamais un pays "nan"
+    df = pd.DataFrame({"country": ["France", np.nan, None], "experience_level": [np.nan, "senior", "senior"]})
+    cov = coverage_table(df)
+    assert cov["country"] == {"France": 1}
+    assert cov["experience_level"] == {"senior": 2}
+    assert cov["cell"] == {}
+    assert check_coverage(COV, np.nan, np.nan) is None
+
+
 def test_well_covered_profile_is_accepted():
     assert check_coverage(COV, "États-Unis", "senior") is None
     assert check_coverage(COV, None, None) is None                   # aucun critère : marché global
