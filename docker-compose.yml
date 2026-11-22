@@ -195,12 +195,16 @@ services:
       MODELS_DIR: /opt/models
       EMBEDDING_MODEL: ${EMBEDDING_MODEL:-sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2}
       HF_HOME: /opt/hf_cache
+      # le code du pipeline monté ci-dessous passe avant la copie installée dans l'image :
+      # l'API et Airflow utilisent ainsi exactement le même code (modèles ML, garde-fous)
+      PYTHONPATH: /opt/pipeline-src
     volumes:
       - ./models:/opt/models
       - hf_cache:/opt/hf_cache
       # code de l'API monté en lecture seule (comme le pipeline dans Airflow) : une modification
       # du code demande un simple redémarrage du conteneur, sans reconstruire l'image
       - ./backend/app:/app/app:ro
+      - ./pipeline:/opt/pipeline-src:ro
     ports: ["127.0.0.1:8000:8000"]
     networks: [backend-net, frontend-net]
     restart: unless-stopped

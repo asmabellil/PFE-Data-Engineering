@@ -317,3 +317,28 @@ def test_job_lineage_access_and_validation(client):
     assert r.status_code == 201
     viewer = auth_headers(client, {"email": "w@test.io", "password": "abcdefg1"})
     assert client.get(f"/api/jobs/{'a' * 40}/lineage", headers=viewer).status_code == 403
+
+
+def test_salary_prediction_refuses_under_represented_profiles(client, monkeypatch):
+    import numpy as np
+
+    import jobinsight.ml.common as ml_common
+
+    class FakePipeline:
+        def predict(self, X):
+            return np.array([np.log(120_000)])
+
+    cov = {"total": 300, "country": {"États-Unis": 230, "France": 11},
+           "experience_level": {"senior": 170, "lead": 120, "junior": 10},
+           "cell": {"États-Unis|senior": 120, "France|senior": 5}}
+    model = {"pipeline": FakePipeline(), "metrics": {"best_model": "random_forest"}, "mae_eur": 20_000,
+             "coverage": cov, "segments": {}}
+    monkeypatch.setattr(ml_common, "load_model", lambda name: model)
+    h = auth_headers(client)
+    body = {"title": "Data Engineer", "technologies": ["Python"], "contract_type": "full_time", "remote": False}
+    ok = client.post("/api/ai/predict-salary", headers=h, json={**body, "country": "États-Unis", "experience_level": "senior"})
+    assert ok.status_code == 200 and ok.json()["salary_eur"] == 120_000
+    refused = client.post("/api/ai/predict-salary", headers=h, json={**body, "country": "France", "experience_level": "senior"})
+    assert refused.status_code == 422 and "11 offre(s)" in refused.json()["detail"]
+    junior = client.post("/api/ai/predict-salary", headers=h, json={**body, "country": None, "experience_level": "junior"})
+    assert junior.status_code == 422 and "junior" in junior.json()["detail"]

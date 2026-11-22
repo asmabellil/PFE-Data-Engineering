@@ -20,6 +20,9 @@ Volumes nommés pour la persistance (`mongo_data`, `minio_data`, `kafka_data`, `
 `exports/` (Power BI), `models/` (modèles partagés Airflow ↔ API).
 Le code de l'API (`backend/app/`) est monté **en lecture seule** : une modification demande un
 simple `docker compose restart backend`, sans reconstruire l'image (qui contient PyTorch).
+Le code du pipeline est aussi monté dans l'API (`./pipeline:/opt/pipeline-src:ro`, placé en tête
+de `PYTHONPATH`) : l'API et Airflow utilisent exactement le même code ML, au lieu de la copie
+figée dans l'image au moment du build.
 
 **Healthchecks** sur Postgres, Kafka, MinIO, MongoDB et l'API ; Airflow attend que ses
 dépendances soient *healthy* (`depends_on: condition: service_healthy`). Mémoire maîtrisée

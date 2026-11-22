@@ -35,6 +35,40 @@ Random Forest, TruncatedSVD, K-Means), **Sentence-Transformers** (Transformer mu
   → modèle **indicatif** : peu d'offres publient un salaire (risque identifié dans le Livrable 1) ;
   les performances s'améliorent avec l'accumulation de données. L'API renvoie toujours un
   intervalle ± MAE.
+- Entraînement du 21/11/2026 (490 offres) : baseline MAE 50,0 k€ ; Ridge 40,0 k€ ;
+  **Random Forest 35,6 k€ (R² 0,55)**.
+
+### Biais des données de salaire et garde-fou
+Les salaires publiés ne représentent pas le marché visé. Le 21/11/2026 : 490 offres avec salaire
+sur 15 161 (3,2 %), à 98 % de Jobicy (télétravail international), 69 % d'Amérique du Nord,
+**11 en France**, 391 senior ou lead contre 17 junior. WTTJ, première source française, ne publie
+aucun salaire. Le pays est bien une variable du modèle et les montants sont convertis en euros :
+le problème n'est pas la devise mais la **représentativité**.
+
+Une erreur moyenne globale cache ce biais. L'erreur est donc mesurée **par segment**, en
+validation croisée à 5 plis sur toutes les offres (le jeu de test seul serait trop petit) :
+
+| Segment | Offres | Erreur moyenne |
+|---|---|---|
+| États-Unis | 230 | 36,0 k€ |
+| Canada | 110 | 41,6 k€ |
+| Allemagne | 29 | 27,2 k€ |
+| **France** | **11** | **51,1 k€** (la pire) |
+| Lead / Senior | 225 / 176 | 44,3 k€ / 33,0 k€ |
+| Junior | 17 | 17,8 k€ |
+
+**Garde-fou** (`check_coverage` dans `pipeline/jobinsight/ml/salary_model.py`) : le modèle
+mémorise sa couverture et **refuse d'estimer** un profil trop peu représenté, avec une explication
+(réponse 422 de l'API, affichée telle quelle dans la page IA) :
+- moins de 30 offres avec salaire pour le pays demandé ;
+- moins de 30 offres pour le niveau d'expérience demandé ;
+- moins de 10 offres pour le couple pays × niveau.
+
+Sans pays précisé, l'estimation est donnée mais signalée comme reflétant le marché international,
+surtout nord-américain. La fourchette renvoyée utilise l'erreur du segment quand elle est connue,
+plutôt que l'erreur globale. Exemples réels : senior aux États-Unis 165 500 € (accepté), senior en
+France et junior (refusés). La vraie correction est d'ajouter des sources françaises qui publient
+des salaires (France Travail, Adzuna).
 
 ## 3. Clustering des métiers (ML non supervisé)
 TF-IDF (titre + technologies, mots vides EN/FR/DE et niveaux retirés) → **TruncatedSVD 100 dim**
@@ -74,5 +108,5 @@ affiché dans le front. Les modèles sont sauvegardés dans `models/` (joblib / 
 ## Points de discussion pour le rapport
 - Données de labels « faibles » (secteur fourni par la source, parfois large) ;
 - déséquilibre des classes → macro-F1 et pondération ;
-- peu de salaires → régression indicative ;
+- peu de salaires, surtout nord-américains → régression indicative, refus explicite des profils peu représentés ;
 - DL plus coûteux mais multilingue et sémantique ; TF-IDF rapide et explicable.

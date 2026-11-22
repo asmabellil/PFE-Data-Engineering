@@ -145,12 +145,16 @@ def classify(request: Request, body: ClassifyIn, _: dict = Depends(get_current_u
 def predict_salary(request: Request, body: SalaryIn, _: dict = Depends(get_current_user)):
     _models_dir_env()
     from jobinsight.ml.common import load_model
-    from jobinsight.ml.salary_model import MODEL_NAME, predict
+    from jobinsight.ml.salary_model import MODEL_NAME, InsufficientSalaryData, predict
 
     model = load_model(MODEL_NAME)
     if not model:
         raise HTTPException(503, "Modèle de salaire non entraîné (lancer le DAG jobinsight_ml)")
-    return predict(model, body.model_dump())
+    try:
+        return predict(model, body.model_dump())
+    except InsufficientSalaryData as exc:
+        # garde-fou : profil trop peu représenté dans les données d'entraînement -> refus expliqué
+        raise HTTPException(422, str(exc)) from exc
 
 
 @router.get("/clusters")
